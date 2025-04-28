@@ -26,9 +26,9 @@ app.post('/upload', upload.fields([ { name: 'image' }, { name: 'file' } ]), asyn
     const image = req.files[ 'image' ] ? req.files[ 'image' ][ 0 ] : null;
     const file = req.files[ 'file' ] ? req.files[ 'file' ][ 0 ] : null;
 
-    console.log('Received Text:', text);
-    console.log('Received Image:', image);
-    console.log('Received File:', file);
+    // console.log('Received Text:', text);
+    // console.log('Received Image:', image);
+    // console.log('Received File:', file);
 
     // Open-AI API Calls
 
@@ -40,7 +40,7 @@ app.post('/upload', upload.fields([ { name: 'image' }, { name: 'file' } ]), asyn
                 messages: [ { role: 'user', content: text } ],
             });
 
-            res.json({
+            return res.json({
                 response: response.choices[ 0 ].message.content,
             });
         } catch (error) {
@@ -49,7 +49,7 @@ app.post('/upload', upload.fields([ { name: 'image' }, { name: 'file' } ]), asyn
         }
     }
     // Image-Text
-    else if (text && image && !file) {
+    else if (image && !file) {
         try {
             const prompt = `Given this text: "${text}" and based on the uploaded image (${image.originalname}), generate a relevant response.`;
 
@@ -58,7 +58,7 @@ app.post('/upload', upload.fields([ { name: 'image' }, { name: 'file' } ]), asyn
                 messages: [ { role: 'user', content: prompt } ],
             });
 
-            res.json({
+            return res.json({
                 response: response.choices[ 0 ].message.content,
             });
         } catch (error) {
@@ -67,7 +67,7 @@ app.post('/upload', upload.fields([ { name: 'image' }, { name: 'file' } ]), asyn
         }
     }
     // File-Text
-    else if (text && !image && file) {
+    else if (!image && file) {
         try {
             const prompt = `Given this text: "${text}" and considering the uploaded file (${file.originalname}), generate an appropriate response.`;
 
@@ -76,26 +76,14 @@ app.post('/upload', upload.fields([ { name: 'image' }, { name: 'file' } ]), asyn
                 messages: [ { role: 'user', content: prompt } ],
             });
 
-            res.json({
+            return res.json({
                 response: response.choices[ 0 ].message.content,
             });
         } catch (error) {
             console.error('OpenAI error:', error);
-            res.status(500).json({ error: 'Something went wrong with OpenAI.' });
+            return res.status(500).json({ error: 'Something went wrong with OpenAI.' });
         }
     }
-
-
-
-    // Return the response. 
-    res.json({
-        message: 'Upload successful!',
-        data: {
-            text,
-            image: image ? image.filename : null,
-            file: file ? file.filename : null,
-        },
-    });
 });
 
 // Start server
