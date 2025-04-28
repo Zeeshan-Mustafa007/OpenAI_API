@@ -13,18 +13,6 @@ const ChatInput = () => {
             alert("Please enter a message or upload a file/image.");
             return;
         }
-        // if (!text) {
-        //     alert("Please enter a message");
-        //     return;
-        // }
-        // if (!text && image) {
-        //     alert("Please enter a message");
-        //     return;
-        // }
-        // if (!text && file) {
-        //     alert("Please enter a message");
-        //     return;
-        // }
 
         const formData = new FormData();
         formData.append("text", text);
@@ -39,8 +27,9 @@ const ChatInput = () => {
 
             const data = await response.json();
             setResponse(data.response);
-            alert("Server Error: "+ data.error);
-
+            if (data.error) {
+                alert("Server Error: " + data.error);
+            }
             // Reset after submit
             setText("");
             setImage(null);
@@ -114,7 +103,7 @@ const ChatInput = () => {
             {response && (
                 <div className="p-4 mt-4 bg-gray-100 rounded-lg shadow-inner">
                     <h3 className="font-bold mb-2 text-gray-700">
-                        AI Response:
+                        Chat-GPT Response:
                     </h3>
                     <p className="text-gray-800">{response}</p>
                 </div>

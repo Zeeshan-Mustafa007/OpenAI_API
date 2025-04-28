@@ -18,25 +18,7 @@ const openai = new OpenAI({
 app.use(cors());
 app.use(express.json());
 
-// Configure multer for file storage
-// const storage = multer.diskStorage({
-//     destination: (req, file, cb) => {
-//         cb(null, 'uploads/'); // Files will be saved in uploads/ directory
-//     },
-//     filename: (req, file, cb) => {
-//         const uniqueName = Date.now() + '-' + file.originalname;
-//         cb(null, uniqueName);
-//     },
-// });
-
-// const upload = multer({ storage });
 const upload = multer();
-
-// Create uploads folder if not exists (optional in production)
-// const fs = require('fs');
-// if (!fs.existsSync('uploads')) {
-//     fs.mkdirSync('uploads');
-// }
 
 // POST route to handle form submission
 app.post('/upload', upload.fields([ { name: 'image' }, { name: 'file' } ]), async (req, res) => {
