@@ -4,11 +4,13 @@ const ChatInput = () => {
     const [text, setText] = useState("");
     const [image, setImage] = useState(null);
     const [file, setFile] = useState(null);
+    const [request, setRequest] = useState("");
     const [response, setResponse] = useState("");
 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
+        setRequest(text);
         if (!text && !image && !file) {
             alert("Please enter a message or upload a file/image.");
             return;
@@ -30,6 +32,7 @@ const ChatInput = () => {
             if (data.error) {
                 alert("Server Error: " + data.error);
             }
+
             // Reset after submit
             setText("");
             setImage(null);
@@ -67,7 +70,7 @@ const ChatInput = () => {
                 {/* Upload Buttons */}
                 <div className="flex flex-col gap-2">
                     <label className="flex items-center gap-2 cursor-pointer">
-                        📷 Upload Image
+                        📷 Upload Image 
                         <input
                             type="file"
                             accept="image/*"
@@ -100,13 +103,22 @@ const ChatInput = () => {
                     Send
                 </button>
             </form>
-            {response && (
+            { response && (
+                <>
+
+                <div className="p-4 mt-4 bg-gray-100 rounded-lg shadow-inner">
+                    <h3 className="font-bold mb-2 text-gray-700">
+                        Query:
+                    </h3>
+                    <p className="text-gray-800">{request}</p>
+                </div>
                 <div className="p-4 mt-4 bg-gray-100 rounded-lg shadow-inner">
                     <h3 className="font-bold mb-2 text-gray-700">
                         Chat-GPT Response:
                     </h3>
                     <p className="text-gray-800">{response}</p>
                 </div>
+                </>
             )}
         </>
     );
