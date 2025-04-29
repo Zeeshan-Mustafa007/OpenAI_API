@@ -29,8 +29,9 @@ async function ensureAssistant() {
     if (!ASSISTANT_ID) {
         const assistant = await openai.beta.assistants.create({
             name: "My Assistant",
-            instructions: "You are a helpful assistant.",
-            model: "gpt-4-turbo",
+            instructions: "You are a helpful assistant. You can analyze images and PDF documents.",
+            model: "gpt-4o",
+            tools: [],
         });
         ASSISTANT_ID = assistant.id;
         updateEnvVar("ASSISTANT_ID", ASSISTANT_ID);
@@ -70,6 +71,7 @@ function updateEnvVar(key, value) {
 })();
 
 // 📨 POST /upload
+
 app.post('/upload', upload.fields([ { name: 'image' }, { name: 'file' } ]), async (req, res) => {
     const { text } = req.body;
     const image = req.files[ 'image' ]?.[ 0 ];
