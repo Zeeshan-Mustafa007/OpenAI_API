@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const multer = require('multer');
+const { PassThrough } = require('stream');
 const { OpenAI } = require('openai');
 require('dotenv').config();
 
@@ -63,7 +64,7 @@ app.post('/upload', upload.fields([ { name: 'image' }, { name: 'file' } ]), asyn
                 ],
             });
 
-            console.log('OpenAI response:', response.output_text);
+            // console.log('OpenAI response:', response.output_text);
 
             return res.json({
                 response: response.output_text,
@@ -76,21 +77,50 @@ app.post('/upload', upload.fields([ { name: 'image' }, { name: 'file' } ]), asyn
     // File-Text
     else if (!image && file) {
         try {
-            const prompt = `Given this text: "${text}" and considering the uploaded file (${file.originalname}), generate an appropriate response.`;
+            // Limit check (e.g., 20MB)
+            const MAX_FILE_SIZE = 20 * 1024 * 1024;
+            if (file.size > MAX_FILE_SIZE) {
+                return res.status(400).json({
+                    error: `File too large. Max allowed size is ${MAX_FILE_SIZE / (1024 * 1024)} MB.`,
+                });
+            }
 
-            const response = await openai.chat.completions.create({
-                model: 'gpt-4.1',
-                messages: [ { role: 'user', content: prompt } ],
+            // Convert buffer to base64 string
+            const base64String = file.buffer.toString('base64');
+            const mimeType = file.mimetype || 'application/octet-stream';
+
+            const response = await openai.responses.create({
+                model: "gpt-4.1",
+                input: [
+                    {
+                        role: "user",
+                        content: [
+                            {
+                                type: "input_file",
+                                filename: file.originalname,
+                                file_data: `data:${mimeType};base64,${base64String}`,
+                            },
+                            {
+                                type: "input_text",
+                                text: text,
+                            },
+                        ],
+                    },
+                ],
             });
+
+            console.log("OpenAI file-text response:", response.output_text);
 
             return res.json({
-                response: response.choices[ 0 ].message.content,
+                response: response.output_text,
             });
         } catch (error) {
-            console.error('OpenAI error:', error);
-            return res.status(500).json({ error: 'Something went wrong with OpenAI.' });
+            console.error("OpenAI file or chat error:", error);
+            return res.status(500).json({ error: "Something went wrong with OpenAI." });
         }
     }
+
+
 
     return res.status(400).json({ error: 'No valid input provided.' });
 });
