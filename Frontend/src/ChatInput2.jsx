@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-const ChatInput = () => {
+const ChatInput2 = () => {
     const [text, setText] = useState("");
     const [image, setImage] = useState(null);
     const [file, setFile] = useState(null);
@@ -12,6 +12,8 @@ const ChatInput = () => {
             const res = await fetch("http://localhost:5000/history");
             const data = await res.json();
             if (Array.isArray(data.messages)) {
+                // console.log("data.messages");
+                // console.log(data.messages);
                 setChatHistory(data.messages);
             } else {
                 console.warn("Unexpected history response format");
@@ -80,7 +82,11 @@ const ChatInput = () => {
                         }`}
                     >
                         <p className="whitespace-pre-wrap">
-                            {msg.content?.text?.value || "[No content]"}
+                            
+                            {/* {console.log("msg") }
+                            { console.log(msg) } */}
+                            {msg.role === "user" ? "[ You ]: " : "[ Assistant ]: "}
+                            {msg.content[0]?.text?.value || "[No content]"}
                         </p>
                     </div>
                 ))}
@@ -136,4 +142,4 @@ const ChatInput = () => {
     );
 };
 
-export default ChatInput;
+export default ChatInput2;
