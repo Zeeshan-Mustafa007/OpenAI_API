@@ -90,14 +90,14 @@ app.post('/upload', upload.fields([ { name: 'image' }, { name: 'file' } ]), asyn
                 file: await toFile(image.buffer, image.originalname),
                 purpose: 'assistants'
             });
+            // console.log("Image file created:", imageFile.id);
 
-            console.log("Image file created:", imageFile.id);
         } else if (file) {
             uploadedFile = await openai.files.create({
-                file: file.buffer, // Pass the buffer directly
-                purpose: "user_data",
-                filename: file.originalname, // Specify the filename
+                file: await toFile(file.buffer, file.originalname),
+                purpose: 'assistants'
             });
+            console.log("file created:", uploadedFile.id);
         }
 
         // Send message + Image to thread
@@ -122,8 +122,12 @@ app.post('/upload', upload.fields([ { name: 'image' }, { name: 'file' } ]), asyn
             await openai.beta.threads.messages.create(THREAD_ID, {
                 role: "user",
                 content: messageContent,
-                attachments: [ { file_id: uploadedFile.id } ],
-                tools: [ { type: 'file_search' } ],
+                attachments: [
+                    {
+                        file_id: uploadedFile.id,
+                        tools: [ { type: "file_search" } ],
+                    },
+                ], 
             });
         }
         // Send message to thread
