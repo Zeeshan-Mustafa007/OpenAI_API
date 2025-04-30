@@ -19,6 +19,7 @@ app.use(cors({
     origin: 'http://localhost:5173',
     credentials: true,
 }));
+
 app.use(express.json());
 
 let ASSISTANT_ID = process.env.ASSISTANT_ID;
@@ -97,7 +98,7 @@ app.post('/upload', upload.fields([ { name: 'image' }, { name: 'file' } ]), asyn
                 file: await toFile(file.buffer, file.originalname),
                 purpose: 'assistants'
             });
-            console.log("file created:", uploadedFile.id);
+            // console.log("file created:", uploadedFile.id);
         }
 
         // Send message + Image to thread
