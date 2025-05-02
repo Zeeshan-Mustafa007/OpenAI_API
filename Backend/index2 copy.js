@@ -8,6 +8,7 @@ require('dotenv').config();
 
 const app = express();
 const PORT = 5000;
+const dotenvPath = path.resolve(__dirname, '.env');
 
 const openai = new OpenAI({
     apiKey: process.env.OPENAI_API_KEY,
@@ -21,41 +22,20 @@ app.use(cors({
 
 app.use(express.json());
 
-let ASSISTANT_ID;
-let THREAD_ID;
-
-const configPath = path.resolve(__dirname, 'config.json');
-
-// ✅ Helper function to read from JSON file
-function readConfig() {
-    if (!fs.existsSync(configPath)) {
-        fs.writeFileSync(configPath, JSON.stringify({}), 'utf8'); // Create file if not present
-    }
-    const data = fs.readFileSync(configPath, 'utf8');
-    return JSON.parse(data);
-}
-
-// ✅ Helper function to write to JSON file
-function writeConfig(key, value) {
-    const config = readConfig();
-    config[key] = value;
-    fs.writeFileSync(configPath, JSON.stringify(config, null, 2), 'utf8');
-}
+let ASSISTANT_ID = process.env.ASSISTANT_ID;
+let THREAD_ID = process.env.THREAD_ID;
 
 // ✅ Create Assistant if needed
 async function ensureAssistant() {
-    const config = readConfig();
-    ASSISTANT_ID = config.ASSISTANT_ID;
-
     if (!ASSISTANT_ID) {
         const assistant = await openai.beta.assistants.create({
             name: "My Assistant",
             instructions: "You are a helpful assistant. You can analyze images and PDF documents. Answer user questions using any uploaded file knowledge.",
             model: "gpt-4o",
-            tools: [{ type: 'file_search' }],
+            tools: [ { type: 'file_search' } ],
         });
         ASSISTANT_ID = assistant.id;
-        writeConfig("ASSISTANT_ID", ASSISTANT_ID);
+        updateEnvVar("ASSISTANT_ID", ASSISTANT_ID);
         console.log("✅ Assistant created:", ASSISTANT_ID);
     } else {
         console.log("✅ Using existing Assistant ID:", ASSISTANT_ID);
@@ -64,17 +44,25 @@ async function ensureAssistant() {
 
 // ✅ Create Thread if needed
 async function ensureThread() {
-    const config = readConfig();
-    THREAD_ID = config.THREAD_ID;
-
     if (!THREAD_ID) {
         const thread = await openai.beta.threads.create();
         THREAD_ID = thread.id;
-        writeConfig("THREAD_ID", THREAD_ID);
+        updateEnvVar("THREAD_ID", THREAD_ID);
         console.log("✨ Thread created:", THREAD_ID);
     } else {
         console.log("✅ Using existing Thread ID:", THREAD_ID);
     }
+}
+
+// ✅ Save to .env
+function updateEnvVar(key, value) {
+    let env = fs.readFileSync(dotenvPath, "utf8");
+    if (env.includes(`${key}=`)) {
+        env = env.replace(new RegExp(`${key}=.*`), `${key}=${value}`);
+    } else {
+        env += `\n${key}=${value}`;
+    }
+    fs.writeFileSync(dotenvPath, env, "utf8");
 }
 
 // 🔁 Initialize assistant + thread on server start
