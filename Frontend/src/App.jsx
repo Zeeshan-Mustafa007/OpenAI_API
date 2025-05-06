@@ -7,9 +7,9 @@ function App() {
 
   return (
     <>
-      <ChatInput/>
+      {/* <ChatInput/> */}
       {/* <ChatInput2/> */}
-      {/* <ChatInput3/> */}
+      <ChatInput3/>
     </>
   )
 }

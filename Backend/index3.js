@@ -21,7 +21,6 @@ app.use(cors({
 
 app.use(express.json());
 
-let ASSISTANT_ID;
 let THREAD_ID;
 
 const configPath = path.resolve(__dirname, 'config.json');
@@ -42,26 +41,6 @@ function writeConfig(key, value) {
     fs.writeFileSync(configPath, JSON.stringify(config, null, 2), 'utf8');
 }
 
-// ✅ Create Assistant if needed
-async function ensureAssistant() {
-    const config = readConfig();
-    ASSISTANT_ID = config.ASSISTANT_ID;
-
-    if (!ASSISTANT_ID) {
-        const assistant = await openai.beta.assistants.create({
-            name: "My Assistant",
-            instructions: "You are a helpful assistant. You can analyze images and PDF documents. Answer user questions using any uploaded file knowledge.",
-            model: "gpt-4o",
-            tools: [{ type: 'file_search' }],
-        });
-        ASSISTANT_ID = assistant.id;
-        writeConfig("ASSISTANT_ID", ASSISTANT_ID);
-        console.log("✅ Assistant created:", ASSISTANT_ID);
-    } else {
-        console.log("✅ Using existing Assistant ID:", ASSISTANT_ID);
-    }
-}
-
 // ✅ Create Thread if needed
 async function ensureThread() {
     const config = readConfig();
@@ -77,9 +56,8 @@ async function ensureThread() {
     }
 }
 
-// 🔁 Initialize assistant + thread on server start
+// 🔁 Check thread on server start
 (async () => {
-    await ensureAssistant();
     await ensureThread();
 })();
 
@@ -90,7 +68,7 @@ app.post('/upload', upload.fields([ { name: 'image' }, { name: 'file' } ]), asyn
     const image = req.files[ 'image' ]?.[ 0 ];
     const file = req.files[ 'file' ]?.[ 0 ];
 
-    if (!text) return res.status(400).json({ error: "Text is required." });
+    // if (!text) return res.status(400).json({ error: "Text is required." });
 
     try {
         const messageContent = [ { type: "text", text } ];
@@ -101,22 +79,43 @@ app.post('/upload', upload.fields([ { name: 'image' }, { name: 'file' } ]), asyn
         if (image) {
             imageFile = await openai.files.create({
                 file: await toFile(image.buffer, image.originalname),
-                purpose: 'assistants'
+                purpose: 'user_data'
             });
             // console.log("Image file created:", imageFile.id);
 
         } else if (file) {
             uploadedFile = await openai.files.create({
                 file: await toFile(file.buffer, file.originalname),
-                purpose: 'assistants'
+                purpose: 'user_data'
             });
             // console.log("file created:", uploadedFile.id);
         }
 
         // Send message + Image to thread
         if (image && imageFile) {
+            const base64Image = image.buffer.toString('base64');
+            const mimeType = image.mimetype || 'image/jpeg'; // fallback if not present
+
+            const response = await openai.responses.create({
+                model: 'gpt-4.1',
+                tools: [ { type: "web_search_preview" } ],
+                input: [
+                    {
+                        role: 'user',
+                        content: [
+                            { type: 'input_text', text: text },
+                            {
+                                type: 'input_image',
+                                image_url: `data:${mimeType};base64,${base64Image}`,
+                            },
+                        ],
+                    },
+                ],
+            });
+
             console.log("Sending message + image to thread:", imageFile.id);
             
+            // Sending user message + image to thread
             await openai.beta.threads.messages.create(THREAD_ID, {
                 role: "user",
                 content: [
@@ -129,9 +128,49 @@ app.post('/upload', upload.fields([ { name: 'image' }, { name: 'file' } ]), asyn
                     }
                 ],
             });
+
+            // Sending assistant response to thread
+            await openai.beta.threads.messages.create(THREAD_ID, {
+                role: "assistant",
+                content: [
+                    { type: 'text', text:response.output_text },
+                ],
+            });
+
+            // console.log('OpenAI response:', response.output_text);
+            return res.json({
+                response: response.output_text,
+            });
         }
         // Send message + File to thread
         else if (file && uploadedFile) {
+
+            // Convert buffer to base64 string
+            const base64String = file.buffer.toString('base64');
+            const mimeType = file.mimetype || 'application/octet-stream';
+
+            const response = await openai.responses.create({
+                model: "gpt-4.1",
+                tools: [ { type: "web_search_preview" } ],
+                input: [
+                    {
+                        role: "user",
+                        content: [
+                            {
+                                type: "input_file",
+                                filename: file.originalname,
+                                file_data: `data:${mimeType};base64,${base64String}`,
+                            },
+                            {
+                                type: "input_text",
+                                text: text,
+                            },
+                        ],
+                    },
+                ],
+            });
+
+            // sending user message + file to thread
             await openai.beta.threads.messages.create(THREAD_ID, {
                 role: "user",
                 content: messageContent,
@@ -142,42 +181,50 @@ app.post('/upload', upload.fields([ { name: 'image' }, { name: 'file' } ]), asyn
                     },
                 ], 
             });
+
+            // sending assistant response to thread
+            await openai.beta.threads.messages.create(THREAD_ID, {
+                role: "assistant",
+                content: [
+                    { type: 'text', text:response.output_text },
+                ],
+            });
+
+            // console.log("OpenAI file-text response:", response);
+            return res.json({
+                response: response.output_text,
+            });
         }
         // Send message to thread
         else {
+
+            const response = await openai.responses.create({
+                model: 'gpt-4.1',
+                tools: [ { type: "web_search_preview" } ],
+                input: text,
+            });
+
+            // Sending user message to thread
             await openai.beta.threads.messages.create(THREAD_ID, {
                 role: "user",
                 content: messageContent,
             });
+
+            // Sending assistant response to thread
+            await openai.beta.threads.messages.create(THREAD_ID, {
+                role: "assistant",
+                content: [
+                    { type: 'text', text: response.output_text },
+                ],
+            });
+
+            return res.json({
+                response: response.output_text,
+            });
         }
-
-        // Start a run
-        const run = await openai.beta.threads.runs.create(THREAD_ID, {
-            assistant_id: ASSISTANT_ID,
-        });
-
-        // Wait for run to complete
-        const timeout = Date.now() + 60 * 1000;
-        let status;
-        while (Date.now() < timeout) {
-            const check = await openai.beta.threads.runs.retrieve(THREAD_ID, run.id);
-            status = check.status;
-            if (status === "completed") break;
-            await new Promise(r => setTimeout(r, 1000));
-        }
-
-        if (status !== "completed") {
-            throw new Error("Run did not complete in time.");
-        }
-
-        // Get response from assistant
-        const messages = await openai.beta.threads.messages.list(THREAD_ID);
-        const latest = messages.data.find(m => m.role === "assistant");
-
-        res.json({ response: latest?.content?.[ 0 ]?.text?.value || "No response." });
 
     } catch (err) {
-        console.error("Assistant error:", err);
+        // console.error("Assistant error:", err);
         res.status(500).json({ error: "Something went wrong." });
     }
 });

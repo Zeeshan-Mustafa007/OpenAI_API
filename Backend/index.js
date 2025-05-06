@@ -29,13 +29,13 @@ app.post('/upload', upload.fields([ { name: 'image' }, { name: 'file' } ]), asyn
     // Text-Only
     if (text && !image && !file) {
         try {
-            const response = await openai.chat.completions.create({
+            const response = await openai.responses.create({
                 model: 'gpt-4.1',
-                messages: [ { role: 'user', content: text } ],
+                input: text,
             });
 
             return res.json({
-                response: response.choices[ 0 ].message.content,
+                response: response.output_text,
             });
         } catch (error) {
             console.error('OpenAI error:', error);
