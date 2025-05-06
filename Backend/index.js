@@ -91,6 +91,7 @@ app.post('/upload', upload.fields([ { name: 'image' }, { name: 'file' } ]), asyn
 
             const response = await openai.responses.create({
                 model: "gpt-4.1",
+                tools: [{ type: "web_search_preview" }],
                 input: [
                     {
                         role: "user",
@@ -109,7 +110,7 @@ app.post('/upload', upload.fields([ { name: 'image' }, { name: 'file' } ]), asyn
                 ],
             });
 
-            console.log("OpenAI file-text response:", response.output_text);
+            console.log("OpenAI file-text response:", response);
 
             return res.json({
                 response: response.output_text,
