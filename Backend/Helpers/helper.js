@@ -83,7 +83,7 @@ async function uploadImage(text, image) {
 
         const response = await openai.responses.create({
             model: "gpt-4.1",
-            tools: [{ type: "web_search_preview" }],
+            // tools: [{ type: "web_search_preview" }],
             input: [
                 {
                     role: "user",
@@ -104,7 +104,7 @@ async function uploadImage(text, image) {
         await openai.beta.threads.messages.create(THREAD_ID, {
             role: "user",
             content: [
-                { type: "text", text },
+                { type: "text", text},
                 {
                     type: "image_file",
                     image_file: {
