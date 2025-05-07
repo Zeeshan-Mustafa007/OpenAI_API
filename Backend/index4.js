@@ -56,7 +56,7 @@ app.post(
             }
             // text only
             else {
-                const response = await uploadText(text);
+                const response = await uploadText(text, webSearch);
                 return res.json({
                     response: response,
                 });

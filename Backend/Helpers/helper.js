@@ -47,12 +47,23 @@ async function fetchHistory() {
     return messages.data.reverse();
 }
 
-async function uploadText(text) {
-    const response = await openai.responses.create({
-        model: "gpt-4.1",
-        tools: [{ type: "web_search_preview" }],
-        input: text,
-    });
+async function uploadText(text, webSearch) {
+
+    let response;
+    if (webSearch === "true") {
+        // console.log("Web search enabled:", webSearch);
+        response = await openai.responses.create({
+            model: "gpt-4.1",
+            tools: [{ type: "web_search_preview" }],
+            input: text,
+        });
+    } else {
+        // console.log("Web search disabled:", webSearch);
+        response = await openai.responses.create({
+            model: "gpt-4.1",
+            input: text,
+        });
+    }
 
     // Sending user message to thread
     await openai.beta.threads.messages.create(THREAD_ID, {
@@ -104,7 +115,7 @@ async function uploadImage(text, image) {
         await openai.beta.threads.messages.create(THREAD_ID, {
             role: "user",
             content: [
-                { type: "text", text},
+                { type: "text", text },
                 {
                     type: "image_file",
                     image_file: {
@@ -180,7 +191,6 @@ async function uploadFile(text, file) {
         return response.output_text;
     }
 }
-
 
 module.exports = {
     ensureThread,
