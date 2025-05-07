@@ -140,7 +140,7 @@ const ChatInput = ({
                 {/* Send Button */}
                 <button
                     type="submit"
-                    disabled={loading}
+                    disabled={loading || (!text && !image && !file)}
                     className="bg-white hover:opacity-75 text-black px-4 py-2 rounded-full disabled:opacity-50"
                 >
                     ➤

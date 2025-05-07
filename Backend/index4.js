@@ -35,7 +35,8 @@ app.post(
     async (req, res) => {
         const { text, webSearch } = req.body;
         const image = req.files["image"]?.[0];
-        const file = req.files["file"]?.[0];
+        const file = req.files[ "file" ]?.[ 0 ];
+        
 
         // console.log("Received webSearch:", webSearch);
         

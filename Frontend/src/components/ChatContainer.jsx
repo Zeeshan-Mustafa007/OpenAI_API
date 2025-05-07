@@ -52,7 +52,7 @@ const ChatContainer = () => {
             });
             const data = await res.json();
             if (data.error) {
-                alert("Server error: " + data.error);
+                throw new Error(data.error);
             }
             await fetchChatHistory();
             setText("");
@@ -60,8 +60,14 @@ const ChatContainer = () => {
             setFile(null);
         } catch (err) {
             console.error("Upload error:", err);
+            setText("");
+            setImage(null);
+            setFile(null);
         } finally {
             setLoading(false);
+            setText("");
+            setImage(null);
+            setFile(null);
         }
     };
 

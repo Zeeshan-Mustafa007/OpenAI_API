@@ -48,7 +48,6 @@ async function fetchHistory() {
 }
 
 async function uploadText(text, webSearch) {
-
     let response;
     if (webSearch === "true") {
         // console.log("Web search enabled:", webSearch);
@@ -99,7 +98,10 @@ async function uploadImage(text, image) {
                 {
                     role: "user",
                     content: [
-                        { type: "input_text", text: text },
+                        {
+                            type: "input_text",
+                            text: text.trim() || image?.originalname || "",
+                        },
                         {
                             type: "input_image",
                             image_url: `data:${mimeType};base64,${base64Image}`,
@@ -109,13 +111,16 @@ async function uploadImage(text, image) {
             ],
         });
 
-        console.log("Sending message + image to thread:", imageFile.id);
+        // console.log("Sending message + image to thread:", imageFile.id);
 
         // Sending user message + image to thread
         await openai.beta.threads.messages.create(THREAD_ID, {
             role: "user",
             content: [
-                { type: "text", text },
+                {
+                    type: "text",
+                    text: text.trim() || image?.originalname || "",
+                },
                 {
                     type: "image_file",
                     image_file: {
@@ -124,6 +129,8 @@ async function uploadImage(text, image) {
                 },
             ],
         });
+
+        console.log("Sending assistant response to thread.");
 
         // Sending assistant response to thread
         await openai.beta.threads.messages.create(THREAD_ID, {
@@ -162,7 +169,7 @@ async function uploadFile(text, file) {
                         },
                         {
                             type: "input_text",
-                            text: text,
+                            text: text.trim() || file?.originalname || "",
                         },
                     ],
                 },
@@ -172,7 +179,9 @@ async function uploadFile(text, file) {
         // sending user message + file to thread
         await openai.beta.threads.messages.create(THREAD_ID, {
             role: "user",
-            content: [{ type: "text", text }],
+            content: [
+                { type: "text", text: text.trim() || file?.originalname || "" },
+            ],
             attachments: [
                 {
                     file_id: uploadedFile.id,

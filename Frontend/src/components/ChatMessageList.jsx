@@ -32,7 +32,7 @@ const ChatMessageList = ({webSearch, messages, loading, messagesEndRef }) => {
             )}
 
             {loading && (
-                <div className="flex justify-start">
+                <div className="flex justify-start mx-5">
                     <div className="bg-[#292A2D] flex justify-center items-center gap-2 text-gray-100 p-4 rounded-lg">
                         {webSearch && loading && (
                             <div className="text-md text-gray-400 text-center italic">
