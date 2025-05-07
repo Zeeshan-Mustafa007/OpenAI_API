@@ -9,7 +9,7 @@ const ChatInput = ({ text, setText, setImage, setFile, onSubmit, loading }) => {
     return (
         <form
             onSubmit={handleSubmit}
-            className="bg-[#303030] border border-[#424242] p-4"
+            className="bg-[#303030] border border-[#424242] p-4 mx-8 my-4 rounded-lg"
         >
             <div className="flex items-end gap-3">
                 {/* Upload Buttons */}

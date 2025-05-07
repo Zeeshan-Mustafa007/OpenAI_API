@@ -1,6 +1,6 @@
-@tailwind base;
+/* @tailwind base;
 @tailwind components;
-@tailwind utilities;
+@tailwind utilities; */
 
 /* Custom Scrollbar Styling */
 ::-webkit-scrollbar {
@@ -19,6 +19,6 @@
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background: #888;
+    background: #929292;
     /* Thumb hover background */
 }

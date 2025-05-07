@@ -14,7 +14,7 @@ const ChatMessageList = ({search, messages, loading, messagesEndRef }) => {
                         className={`max-w-xl px-4 py-3 text-white text-[16px] font-[400] whitespace-pre-wrap ${
                             msg.role === "user"
                                 ? "bg-[#303030] relative max-w-[var(--user-chat-width,70%)] bg-token-message-surface rounded-3xl px-5 py-2.5"
-                                : "bg-[#212121] leading-[28px]"
+                                : "bg-transparent leading-[28px]"
                         }`}
                     >
                         {msg?.content[0]?.text?.value || "[No content]"}
