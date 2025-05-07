@@ -39,6 +39,7 @@ const ChatContainer = () => {
 
         const formData = new FormData();
         formData.append("text", text);
+        formData.append("webSearch", webSearch);
         if (image) formData.append("image", image);
         if (file) formData.append("file", file);
 
@@ -75,8 +76,10 @@ const ChatContainer = () => {
             <ChatInput
                 className=""
                 text={text}
-                setText={setText}
-                setImage={setImage}
+                setText={ setText }
+                image={image}
+                setImage={ setImage }
+                file={file}
                 setFile={setFile}
                 onSubmit={handleSubmit}
                 webSearch={webSearch}

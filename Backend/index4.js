@@ -33,10 +33,12 @@ app.post(
     "/upload",
     upload.fields([{ name: "image" }, { name: "file" }]),
     async (req, res) => {
-        const { text } = req.body;
+        const { text, webSearch } = req.body;
         const image = req.files["image"]?.[0];
         const file = req.files["file"]?.[0];
 
+        // console.log("Received webSearch:", webSearch);
+        
         try {
             // text + image
             if (image) {
