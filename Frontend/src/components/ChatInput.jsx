@@ -1,6 +1,15 @@
 import React from "react";
 
-const ChatInput = ({ text, setText, setImage, setFile, onSubmit, loading }) => {
+const ChatInput = ({
+    text,
+    setText,
+    setImage,
+    setFile,
+    onSubmit,
+    webSearch,
+    setWebSearch,
+    loading,
+}) => {
     const handleSubmit = (e) => {
         e.preventDefault();
         onSubmit();
@@ -9,7 +18,7 @@ const ChatInput = ({ text, setText, setImage, setFile, onSubmit, loading }) => {
     return (
         <form
             onSubmit={handleSubmit}
-            className="bg-[#303030] border border-[#424242] p-4 mx-8 my-4 rounded-lg"
+            className="bg-[#303030] border border-[#424242] p-4 mx-8 my-4 rounded-3xl"
         >
             <div className="flex items-end gap-3">
                 {/* Upload Buttons */}
@@ -49,8 +58,16 @@ const ChatInput = ({ text, setText, setImage, setFile, onSubmit, loading }) => {
                         />
                     </label>
                     <button
+                        onClick={(e) => {
+                            e.preventDefault(); // Prevent form submission
+                            setWebSearch(!webSearch); // Toggle web search state
+                        }}
                         type="button"
-                        class="flex h-full min-w-8 cursor-pointer items-center gap-1 justify-center p-2 rounded-full bg-[#424242] text-gray-400 hover:bg-[#525252] hover:text-white"
+                        className={`flex h-full min-w-8 cursor-pointer items-center gap-1 justify-center p-2 rounded-full border ${
+                            webSearch === true
+                                ? "border-white text-white"
+                                : "text-gray-400 border-[#424242]"
+                        }`}
                     >
                         <svg
                             xmlns="http://www.w3.org/2000/svg"

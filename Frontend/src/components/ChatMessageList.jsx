@@ -1,6 +1,6 @@
 import React from "react";
 
-const ChatMessageList = ({search, messages, loading, messagesEndRef }) => {
+const ChatMessageList = ({webSearch, messages, loading, messagesEndRef }) => {
     return (
         <div className="flex-grow overflow-y-auto px-4 py-6 ">
             {messages.map((msg, idx) => (
@@ -31,15 +31,14 @@ const ChatMessageList = ({search, messages, loading, messagesEndRef }) => {
                 </div>
             )}
 
-            {search && loading && (
-                <div className="text-sm text-gray-400 text-center italic">
-                    Searching the web
-                </div>
-            )}
-
-            {!search && loading && (
+            {loading && (
                 <div className="flex justify-start">
-                    <div className="bg-[#292A2D] text-gray-100 p-4 rounded-lg">
+                    <div className="bg-[#292A2D] flex justify-center items-center gap-2 text-gray-100 p-4 rounded-lg">
+                        {webSearch && loading && (
+                            <div className="text-md text-gray-400 text-center italic">
+                                Searching the web
+                            </div>
+                        )}
                         <div className="flex space-x-2">
                             <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
                             <div

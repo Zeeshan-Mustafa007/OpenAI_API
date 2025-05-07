@@ -7,7 +7,8 @@ const ChatContainer = () => {
     const [image, setImage] = useState(null);
     const [file, setFile] = useState(null);
     const [chatHistory, setChatHistory] = useState([]);
-    const [loading, setLoading] = useState(false);
+    const [ loading, setLoading ] = useState(false);
+    const [webSearch, setWebSearch] = useState(false);
     const messagesEndRef = useRef(null);
 
     const fetchChatHistory = async () => {
@@ -66,17 +67,20 @@ const ChatContainer = () => {
     return (
         <div className="flex flex-col h-screen bg-[#212121] text-gray-100 ">
             <ChatMessageList
+                webSearch={webSearch}
                 messages={chatHistory}
                 loading={loading}
                 messagesEndRef={messagesEndRef}
             />
             <ChatInput
-                className="[--thread-content-max-width:32rem] @[34rem]:[--thread-content-max-width:40rem] @[64rem]:[--thread-content-max-width:48rem] mx-auto flex max-w-(--thread-content-max-width) flex-1 text-base gap-4 md:gap-5 lg:gap-6"
+                className=""
                 text={text}
                 setText={setText}
                 setImage={setImage}
                 setFile={setFile}
                 onSubmit={handleSubmit}
+                webSearch={webSearch}
+                setWebSearch={setWebSearch}
                 loading={loading}
             />
         </div>
