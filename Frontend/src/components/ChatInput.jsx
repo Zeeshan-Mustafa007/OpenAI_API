@@ -21,7 +21,7 @@ const ChatInput = ({
     return (
         <form
             onSubmit={handleSubmit}
-            className="max-w-[60%] w-full bg-[#303030] border border-[#424242] py-2 mb-8 rounded-3xl"
+            className="max-w-[57%] w-full bg-bg-secondary border border-bg-tertiary py-2 mb-8 rounded-3xl"
         >
             <div className="flex flex-col rounded-3xl">
                 {/* Displaying the input file and image names */}
@@ -29,14 +29,14 @@ const ChatInput = ({
                     <div className="flex items-center gap-1 px-4 py-2">
                         <div>
                             {file && (
-                                <div className="flex items-center justify-between gap-1 px-4 py-2 text-gray-400 bg-[#424242] rounded-3xl">
+                                <div className="flex items-center justify-between gap-1 px-4 py-2 text-text-secondary bg-bg-tertiary rounded-3xl">
                                     <span className="text-sm font-semibold">
                                         {file.name}
                                     </span>
                                     <button
                                         type="button"
                                         onClick={() => setFile(null)}
-                                        className="text-gray-400 hover:text-white"
+                                        className="text-text-tertiary hover:text-white"
                                     >
                                         <svg
                                             xmlns="http://www.w3.org/2000/svg"
@@ -53,14 +53,14 @@ const ChatInput = ({
                         </div>
                         <div>
                             {image && (
-                                <div className="flex items-center justify-between gap-1 px-4 py-2 text-gray-400 bg-[#424242] rounded-3xl">
+                                <div className="flex items-center justify-between gap-1 px-4 py-2 text-text-secondary bg-bg-tertiary rounded-3xl">
                                     <span className="text-sm font-semibold">
                                         {image.name}
                                     </span>
                                     <button
                                         type="button"
                                         onClick={() => setImage(null)}
-                                        className="text-gray-400 hover:text-white"
+                                        className="text-text-tertiary hover:text-white"
                                     >
                                         <svg
                                             xmlns="http://www.w3.org/2000/svg"
@@ -86,7 +86,7 @@ const ChatInput = ({
                         value={text}
                         onChange={(e) => setText(e.target.value)}
                         placeholder="Ask anything"
-                        className="w-full flex-grow resize-none text-gray-100 rounded-xl px-4 py-2 focus:outline-none placeholder-gray-400"
+                        className="w-full flex-grow resize-none text-text-secondary rounded-xl px-4 py-2 focus:outline-none placeholder-text-tertiary"
                     />
                 </div>
 
@@ -122,14 +122,14 @@ const ChatInput = ({
                                 />
                             </label>
                             {webSearch && (
-                                <div className="absolute w-[170px] bottom-full left-[50px] transform -translate-x-1/2 mb-2 hidden group-hover:block group-hover:!opacity-100 bg-[#444] text-white text-sm px-2 py-1 rounded">
+                                <div className="absolute w-[170px] bottom-full left-[50px] transform -translate-x-1/2 mb-2 hidden group-hover:block group-hover:!opacity-100 bg-bg-tertiary text-white text-sm px-2 py-1 rounded">
                                     Disabled in Search mode
                                 </div>
                             )}
                         </div>
                         <div className="flex items-center relative group">
                             <label
-                                className={`flex items-center text-gray-400 hover:text-white  ${
+                                className={`flex items-center text-text-tertiary hover:text-white  ${
                                     webSearch
                                         ? "opacity-50 cursor-not-allowed "
                                         : "cursor-pointer"
@@ -152,7 +152,7 @@ const ChatInput = ({
                                 />
                             </label>
                             {webSearch && (
-                                <div className="absolute w-[170px] bottom-full left-[50px] transform -translate-x-1/2 mb-2 hidden group-hover:block group-hover:!opacity-100 bg-[#444] text-white text-sm px-2 py-1 rounded">
+                                <div className="absolute w-[170px] bottom-full left-[50px] transform -translate-x-1/2 mb-2 hidden group-hover:block group-hover:!opacity-100 bg-bg-tertiary text-white text-sm px-2 py-1 rounded">
                                     Disabled in Search mode
                                 </div>
                             )}
@@ -168,7 +168,7 @@ const ChatInput = ({
                                 className={`flex h-full min-w-8 items-center gap-1 justify-center px-2 py-1 rounded-full border ${
                                     webSearch === true
                                         ? "border-white text-white"
-                                        : "text-gray-400 border-[#424242]"
+                                        : "text-text-tertiary border-bg-tertiary"
                                 } ${
                                     image || file
                                         ? "opacity-50 cursor-not-allowed "
@@ -191,7 +191,7 @@ const ChatInput = ({
                                 <span className="">Search</span>
                             </button>
                             {(image || file) && (
-                                <div className="absolute w-[215px] bottom-full left-[50px] transform -translate-x-1/2 mb-2 hidden group-hover:block group-hover:!opacity-100 bg-[#444] text-white text-sm px-2 py-1 rounded">
+                                <div className="absolute w-[215px] bottom-full left-[50px] transform -translate-x-1/2 mb-2 hidden group-hover:block group-hover:!opacity-100 bg-bg-tertiary text-white text-sm px-2 py-1 rounded">
                                     Search disabled for attachments
                                 </div>
                             )}
@@ -203,7 +203,7 @@ const ChatInput = ({
                         <button
                             type="submit"
                             disabled={loading || (!text && !image && !file)}
-                            className="bg-white hover:opacity-75 text-black px-2 py-1 rounded-full disabled:opacity-50"
+                            className="bg-white hover:opacity-75 text-black px-2 py-1 rounded-full disabled:opacity-50 cursor-pointer"
                         >
                             ➤
                         </button>

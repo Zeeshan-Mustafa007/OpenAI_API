@@ -7,7 +7,7 @@ const ChatContainer = () => {
     const [image, setImage] = useState(null);
     const [file, setFile] = useState(null);
     const [chatHistory, setChatHistory] = useState([]);
-    const [ loading, setLoading ] = useState(false);
+    const [loading, setLoading] = useState(false);
     const [webSearch, setWebSearch] = useState(false);
     const messagesEndRef = useRef(null);
 
@@ -32,7 +32,6 @@ const ChatContainer = () => {
     }, [chatHistory, loading]);
 
     const handleSubmit = async () => {
-
         const formData = new FormData();
         formData.append("text", text);
         formData.append("webSearch", webSearch);
@@ -68,18 +67,28 @@ const ChatContainer = () => {
     };
 
     return (
-        <div className="flex items-center flex-col h-screen bg-[#212121] text-gray-100 ">
-            <ChatMessageList
-                webSearch={webSearch}
-                messages={chatHistory}
-                loading={loading}
-                messagesEndRef={messagesEndRef}
-            />
+        <div className="flex items-center justify-center flex-col h-screen bg-bg-primary">
+            {chatHistory.length === 0 && !loading && (
+                <div className="flex justify-start p-8">
+                    <div className="text-[28px] font-[600] leading-[28px] text-white">
+                        What can I help with?
+                    </div>
+                </div>
+            )}
+            {chatHistory.length !== 0 && (
+                <ChatMessageList
+                    webSearch={webSearch}
+                    messages={chatHistory}
+                    loading={loading}
+                    messagesEndRef={messagesEndRef}
+                />
+            ) }
+            
             <ChatInput
                 text={text}
-                setText={ setText }
+                setText={setText}
                 image={image}
-                setImage={ setImage }
+                setImage={setImage}
                 file={file}
                 setFile={setFile}
                 onSubmit={handleSubmit}
