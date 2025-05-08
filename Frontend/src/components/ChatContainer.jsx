@@ -13,7 +13,7 @@ const ChatContainer = () => {
 
     const fetchChatHistory = async () => {
         try {
-            const res = await fetch("http://localhost:5000/history");
+            const res = await fetch("http://localhost:5000/chat/history");
             const data = await res.json();
             if (Array.isArray(data.messages)) {
                 setChatHistory(data.messages);
@@ -32,10 +32,6 @@ const ChatContainer = () => {
     }, [chatHistory, loading]);
 
     const handleSubmit = async () => {
-        if (!text && !image && !file) {
-            alert("Please enter a message or upload a file/image.");
-            return;
-        }
 
         const formData = new FormData();
         formData.append("text", text);
@@ -46,7 +42,7 @@ const ChatContainer = () => {
         setLoading(true);
 
         try {
-            const res = await fetch("http://localhost:5000/upload", {
+            const res = await fetch("http://localhost:5000/chat/upload", {
                 method: "POST",
                 body: formData,
             });

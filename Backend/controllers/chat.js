@@ -11,7 +11,7 @@ let THREAD_ID;
 
 const configPath = path.resolve(__dirname, "config.json");
 
-// ✅ Helper function to read from JSON file
+//  read from JSON file
 function readConfig() {
     if (!fs.existsSync(configPath)) {
         fs.writeFileSync(configPath, JSON.stringify({}), "utf8"); // Create file if not present
@@ -20,14 +20,14 @@ function readConfig() {
     return JSON.parse(data);
 }
 
-// ✅ Helper function to write to JSON file
+//  write to JSON file
 function writeConfig(key, value) {
     const config = readConfig();
     config[key] = value;
     fs.writeFileSync(configPath, JSON.stringify(config, null, 2), "utf8");
 }
 
-// ✅ Create Thread if needed
+// Create Thread if needed
 async function ensureThread() {
     const config = readConfig();
     THREAD_ID = config.THREAD_ID;
@@ -42,10 +42,9 @@ async function ensureThread() {
     }
 }
 
-async function fetchHistory() {
-    const messages = await openai.beta.threads.messages.list(THREAD_ID);
-    return messages.data.reverse();
-}
+(async () => {
+    await ensureThread();
+})();
 
 async function uploadText(text, webSearch) {
     let response;
@@ -130,7 +129,7 @@ async function uploadImage(text, image) {
             ],
         });
 
-        console.log("Sending assistant response to thread.");
+        // console.log("Sending assistant response to thread.");
 
         // Sending assistant response to thread
         await openai.beta.threads.messages.create(THREAD_ID, {
@@ -201,10 +200,53 @@ async function uploadFile(text, file) {
     }
 }
 
-module.exports = {
-    ensureThread,
-    fetchHistory,
-    uploadText,
-    uploadImage,
-    uploadFile,
+exports.upload = async (req, res) => {
+    const { text, webSearch } = req.body;
+    const image = req.files["image"]?.[0];
+    const file = req.files[ "file" ]?.[ 0 ];
+    
+    console.log("chat.js");
+    console.log("Received text:", text);
+    console.log("Received webSearch:", webSearch);
+    console.log("Received image:", image);
+    console.log("Received file:", file);
+
+
+    try {
+        // text + image
+        if (image) {
+            const response = await uploadImage(text, image);
+            return res.json({
+                response: response,
+            });
+        }
+        // text + file
+        else if (file) {
+            const response = await uploadFile(text, file);
+            return res.json({
+                response: response,
+            });
+        }
+        // text only
+        else {
+            const response = await uploadText(text, webSearch);
+            return res.json({
+                response: response,
+            });
+        }
+    } catch (err) {
+        // console.error("Assistant error:", err);
+        res.status(500).json({ error: "Something went wrong." });
+    }
+};
+
+exports.fetchHistory = async (req, res) => {
+    try {
+        // Default limit is 20 messages change it to 100 if needed
+        const messages = await openai.beta.threads.messages.list(THREAD_ID);
+        res.json({ messages: messages.data.reverse() });
+    } catch (err) {
+        console.error("Error fetching history:", err);
+        res.status(500).json({ error: "Failed to retrieve chat history." });
+    }
 };
