@@ -75,7 +75,7 @@ const ChatContainer = () => {
                     </div>
                 </div>
             )}
-            {chatHistory.length !== 0 && (
+            {(chatHistory.length !== 0 || loading) && (
                 <ChatMessageList
                     webSearch={webSearch}
                     messages={chatHistory}
