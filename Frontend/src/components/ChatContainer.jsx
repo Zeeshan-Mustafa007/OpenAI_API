@@ -68,7 +68,7 @@ const ChatContainer = () => {
     };
 
     return (
-        <div className="flex flex-col h-screen bg-[#212121] text-gray-100 ">
+        <div className="flex items-center flex-col h-screen bg-[#212121] text-gray-100 ">
             <ChatMessageList
                 webSearch={webSearch}
                 messages={chatHistory}
@@ -76,7 +76,6 @@ const ChatContainer = () => {
                 messagesEndRef={messagesEndRef}
             />
             <ChatInput
-                className=""
                 text={text}
                 setText={ setText }
                 image={image}

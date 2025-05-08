@@ -2,7 +2,7 @@ import React from "react";
 
 const ChatMessageList = ({webSearch, messages, loading, messagesEndRef }) => {
     return (
-        <div className="flex-grow overflow-y-auto px-4 py-6 ">
+        <div className="max-w-[60%] w-full flex-grow overflow-y-auto  py-6 ">
             {messages.map((msg, idx) => (
                 <div
                     key={idx}
@@ -11,7 +11,7 @@ const ChatMessageList = ({webSearch, messages, loading, messagesEndRef }) => {
                     }`}
                 >
                     <div
-                        className={`max-w-xl px-4 py-3 text-white text-[16px] font-[400] whitespace-pre-wrap ${
+                        className={` px-4 py-3 text-white text-[16px] font-[400] whitespace-pre-wrap ${
                             msg.role === "user"
                                 ? "bg-[#303030] relative max-w-[var(--user-chat-width,70%)] bg-token-message-surface rounded-3xl px-5 py-2.5"
                                 : "bg-transparent leading-[28px]"
@@ -32,7 +32,7 @@ const ChatMessageList = ({webSearch, messages, loading, messagesEndRef }) => {
             )}
 
             {loading && (
-                <div className="flex justify-start mx-5">
+                <div className="flex justify-start">
                     <div className="bg-[#292A2D] flex justify-center items-center gap-2 text-gray-100 p-4 rounded-lg">
                         {webSearch && loading && (
                             <div className="text-md text-gray-400 text-center italic">
