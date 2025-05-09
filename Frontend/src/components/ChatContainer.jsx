@@ -15,7 +15,10 @@ const ChatContainer = () => {
 
     const fetchChatHistory = async () => {
         try {
-            const res = await fetch("http://localhost:5000/chat/history");
+            // const res = await fetch("http://localhost:5000/chat/history");
+            const res = await fetch(
+                "https://chatbackend.braintyte.com/chat/history"
+            );
             const data = await res.json();
             if (Array.isArray(data.messages)) {
                 setChatHistory(data.messages);
@@ -43,10 +46,13 @@ const ChatContainer = () => {
         setLoading(true);
 
         try {
-            const res = await fetch("http://localhost:5000/chat/upload", {
-                method: "POST",
-                body: formData,
-            });
+            const res = await fetch(
+                "https://chatbackend.brainyte.com/chat/upload",
+                {
+                    method: "POST",
+                    body: formData,
+                }
+            );
             const data = await res.json();
             if (data.error) {
                 throw new Error(data.error);
@@ -99,9 +105,9 @@ const ChatContainer = () => {
                     setFile={setFile}
                     onSubmit={handleSubmit}
                     webSearch={webSearch}
-                    setWebSearch={ setWebSearch }
-                    reason={ reason }
-                    setReason={ setReason }
+                    setWebSearch={setWebSearch}
+                    reason={reason}
+                    setReason={setReason}
                     loading={loading}
                 />
             </div>
