@@ -1,5 +1,6 @@
 import React from "react";
 import TextareaAutosize from "react-textarea-autosize";
+import submit_icon from "../assets/svgs/submit_icon.svg";
 
 const ChatInput = ({
     text,
@@ -21,7 +22,7 @@ const ChatInput = ({
     return (
         <form
             onSubmit={handleSubmit}
-            className="max-w-[57%] w-full bg-bg-secondary border border-bg-tertiary py-2 mb-8 rounded-3xl"
+            className="max-w-[90%] md:max-w-[57%] w-full bg-bg-secondary border border-bg-tertiary py-2 mb-8 rounded-3xl"
         >
             <div className="flex flex-col rounded-3xl">
                 {/* Displaying the input file and image names */}
@@ -203,9 +204,13 @@ const ChatInput = ({
                         <button
                             type="submit"
                             disabled={loading || (!text && !image && !file)}
-                            className="bg-white hover:opacity-75 text-black px-2 py-1 rounded-full disabled:opacity-50 cursor-pointer"
+                            className="bg-white hover:opacity-75 px-2 py-2 rounded-full disabled:opacity-50 cursor-pointer"
                         >
-                            ➤
+                            <img
+                                src={submit_icon}
+                                alt="Submit"
+                                className="w-5 h-5"
+                            />
                         </button>
                     </div>
                 </div>
