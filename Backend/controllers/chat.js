@@ -250,3 +250,21 @@ exports.fetchHistory = async (req, res) => {
         res.status(500).json({ error: "Failed to retrieve chat history." });
     }
 };
+
+exports.newChat = async (req, res) => {
+    try {
+        const config = readConfig();
+        THREAD_ID = config.THREAD_ID;
+
+        if (THREAD_ID) {
+            await openai.beta.threads.delete(THREAD_ID);
+            writeConfig("THREAD_ID", null);
+            console.log("🗑️ Thread deleted:", THREAD_ID);
+        }
+
+        res.json({ message: "New chat started." });
+    } catch (err) {
+        console.error("Error starting new chat:", err);
+        res.status(500).json({ error: "Failed to start a new chat." });
+    }
+};

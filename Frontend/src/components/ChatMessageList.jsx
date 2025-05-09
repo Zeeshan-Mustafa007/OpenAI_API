@@ -2,8 +2,8 @@ import React from "react";
 
 const ChatMessageList = ({ webSearch, messages, loading, messagesEndRef }) => {
     return (
-        <div className="ChatMessageList w-full flex-grow overflow-y-auto py-6 ">
-            <div className="w-full flex flex-col items-center pt-[50px]">
+        <div className="ChatMessageList w-full flex-grow overflow-y-auto">
+            <div className="w-full flex flex-col items-center ">
                 {messages.map((msg, idx) => (
                     <div
                         key={idx}
