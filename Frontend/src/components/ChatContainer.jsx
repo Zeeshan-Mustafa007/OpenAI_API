@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import ChatMessageList from "./ChatMessageList";
 import ChatInput from "./ChatInput";
+import Header from "./header";
 
 const ChatContainer = () => {
     const [text, setText] = useState("");
@@ -67,35 +68,40 @@ const ChatContainer = () => {
     };
 
     return (
-        <div className="ChatContainer flex items-center justify-center flex-col h-screen bg-bg-primary">
-            {chatHistory.length === 0 && !loading && (
-                <div className="flex justify-start p-8">
-                    <div className="text-[28px] font-[600] leading-[28px] text-white">
-                        What can I help with?
-                    </div>
+        <div className="ChatContainer ">
+            <div className="flex items-center justify-center h-screen flex-col">
+                <div className="w-full bg-transparent">
+                    <Header />
                 </div>
-            )}
-            {(chatHistory.length !== 0 || loading) && (
-                <ChatMessageList
-                    webSearch={webSearch}
-                    messages={chatHistory}
-                    loading={loading}
-                    messagesEndRef={messagesEndRef}
-                />
-            )}
+                {chatHistory.length === 0 && !loading && (
+                    <div className="flex justify-start p-8">
+                        <div className="text-[28px] font-[600] leading-[28px] text-white">
+                            What can I help with?
+                        </div>
+                    </div>
+                )}
+                {(chatHistory.length !== 0 || loading) && (
+                    <ChatMessageList
+                        webSearch={webSearch}
+                        messages={chatHistory}
+                        loading={loading}
+                        messagesEndRef={messagesEndRef}
+                    />
+                )}
 
-            <ChatInput
-                text={text}
-                setText={setText}
-                image={image}
-                setImage={setImage}
-                file={file}
-                setFile={setFile}
-                onSubmit={handleSubmit}
-                webSearch={webSearch}
-                setWebSearch={setWebSearch}
-                loading={loading}
-            />
+                <ChatInput
+                    text={text}
+                    setText={setText}
+                    image={image}
+                    setImage={setImage}
+                    file={file}
+                    setFile={setFile}
+                    onSubmit={handleSubmit}
+                    webSearch={webSearch}
+                    setWebSearch={setWebSearch}
+                    loading={loading}
+                />
+            </div>
         </div>
     );
 };

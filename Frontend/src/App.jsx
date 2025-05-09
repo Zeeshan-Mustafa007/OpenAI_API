@@ -3,7 +3,7 @@ import ChatContainer from './components/ChatContainer';
 function App() {
 
   return (
-      <div className="App">
+      <div className="App bg-bg-primary">
           <ChatContainer />
       </div>
   );
