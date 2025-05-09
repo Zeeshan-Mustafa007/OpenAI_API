@@ -205,11 +205,11 @@ exports.upload = async (req, res) => {
     const image = req.files["image"]?.[0];
     const file = req.files[ "file" ]?.[ 0 ];
     
-    console.log("chat.js");
-    console.log("Received text:", text);
-    console.log("Received webSearch:", webSearch);
-    console.log("Received image:", image);
-    console.log("Received file:", file);
+    // console.log("chat.js");
+    // console.log("Received text:", text);
+    // console.log("Received webSearch:", webSearch);
+    // console.log("Received image:", image);
+    // console.log("Received file:", file);
 
 
     try {

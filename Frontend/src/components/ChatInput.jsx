@@ -22,7 +22,7 @@ const ChatInput = ({
     return (
         <form
             onSubmit={handleSubmit}
-            className="max-w-[90%] md:max-w-[57%] w-full bg-bg-secondary border border-bg-tertiary py-2 mb-8 rounded-3xl"
+            className="ChatInput max-w-[90%] md:max-w-[57%] w-full bg-bg-secondary border border-bg-tertiary py-2 mb-8 rounded-3xl"
         >
             <div className="flex flex-col rounded-3xl">
                 {/* Displaying the input file and image names */}

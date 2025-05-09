@@ -67,7 +67,7 @@ const ChatContainer = () => {
     };
 
     return (
-        <div className="flex items-center justify-center flex-col h-screen bg-bg-primary">
+        <div className="ChatContainer flex items-center justify-center flex-col h-screen bg-bg-primary">
             {chatHistory.length === 0 && !loading && (
                 <div className="flex justify-start p-8">
                     <div className="text-[28px] font-[600] leading-[28px] text-white">
@@ -82,8 +82,8 @@ const ChatContainer = () => {
                     loading={loading}
                     messagesEndRef={messagesEndRef}
                 />
-            ) }
-            
+            )}
+
             <ChatInput
                 text={text}
                 setText={setText}
