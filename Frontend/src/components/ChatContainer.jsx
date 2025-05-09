@@ -10,6 +10,7 @@ const ChatContainer = () => {
     const [chatHistory, setChatHistory] = useState([]);
     const [loading, setLoading] = useState(false);
     const [webSearch, setWebSearch] = useState(false);
+    const [reason, setReason] = useState(false);
     const messagesEndRef = useRef(null);
 
     const fetchChatHistory = async () => {
@@ -98,7 +99,9 @@ const ChatContainer = () => {
                     setFile={setFile}
                     onSubmit={handleSubmit}
                     webSearch={webSearch}
-                    setWebSearch={setWebSearch}
+                    setWebSearch={ setWebSearch }
+                    reason={ reason }
+                    setReason={ setReason }
                     loading={loading}
                 />
             </div>
