@@ -1,7 +1,6 @@
 import React from "react";
 import TextareaAutosize from "react-textarea-autosize";
 import submit_icon from "../assets/svgs/submit_icon.svg";
-import reason_icon from "../assets/svgs/reason_icon.svg";
 
 const ChatInput = ({
     text,
@@ -13,8 +12,6 @@ const ChatInput = ({
     onSubmit,
     webSearch,
     setWebSearch,
-    reason,
-    setReason,
     loading,
 }) => {
     const handleSubmit = (e) => {
@@ -213,31 +210,6 @@ const ChatInput = ({
                                     Search the web
                                 </div>
                             )}
-                        </div>
-                        <div className="flex items-center relative group">
-                            <button
-                                onClick={(e) => {
-                                    e.preventDefault();
-                                    setReason(!reason);
-                                }}
-                                type="button"
-                                className={`flex h-full text-text-tertiary border-bg-tertiary min-w-8 items-center gap-1 justify-center px-2 py-1 rounded-full border ${
-                                    reason === true
-                                        ? "border-white text-white"
-                                        : ""
-                                }`}
-                            >
-                                <img
-                                    src={reason_icon}
-                                    alt="Reason Icon"
-                                    className="w-[18px] h-[18px]"
-                                />
-                                <span className="">Reason</span>
-                            </button>
-
-                            <div className="absolute w-fit text-nowrap bottom-[-40px] left-[50px] transform -translate-x-1/2 mb-2 hidden group-hover:block group-hover:!opacity-100 bg-black text-white text-[12px] px-2 py-1 rounded">
-                                Think before responding
-                            </div>
                         </div>
                     </div>
 

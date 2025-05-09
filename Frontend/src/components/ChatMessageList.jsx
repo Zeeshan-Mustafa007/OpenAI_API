@@ -16,7 +16,7 @@ const ChatMessageList = ({ webSearch, messages, loading, messagesEndRef }) => {
                         <p
                             className={`break-all break-words px-4 py-3 text-white text-[16px] font-[400] whitespace-pre-wrap ${
                                 msg.role === "user"
-                                    ? "bg-bg-secondary relative max-w-[var(--user-chat-width,70%)]  rounded-3xl px-5 py-2.5 mx-4"
+                                    ? "bg-bg-secondary max-w-[var(--user-chat-width,70%)]  rounded-3xl px-5 py-2.5 mx-4"
                                     : "bg-transparent leading-[28px]"
                             }`}
                         >

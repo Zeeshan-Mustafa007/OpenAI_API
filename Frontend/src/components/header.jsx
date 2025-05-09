@@ -8,7 +8,7 @@ const Header = () => {
         console.log("New chat created");
     };
     return (
-        <div className="Header text-white flex sticky top-0 z-20 font-semibold">
+        <div className="Header text-white flex font-semibold">
             <div className="flex mx-3 my-2">
                 <button type="button" className="Sidebar_Icon relative group hover:cursor-pointer hover:bg-bg-tertiary p-2 rounded-lg">
                     <img
