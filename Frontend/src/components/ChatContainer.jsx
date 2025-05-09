@@ -17,7 +17,7 @@ const ChatContainer = () => {
         try {
             // const res = await fetch("http://localhost:5000/chat/history");
             const res = await fetch(
-                "https://chatbackend.braintyte.com/chat/history"
+                "https://chatbackend.brainyte.com/chat/history"
             );
             const data = await res.json();
             if (Array.isArray(data.messages)) {
