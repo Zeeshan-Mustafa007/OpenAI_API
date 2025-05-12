@@ -1,11 +1,9 @@
-// ChatMessageList.jsx
 import React from "react";
-import MarkdownRenderer from "./MarkdownRenderer";
 
 const ChatMessageList = ({ webSearch, messages, loading, messagesEndRef }) => {
     return (
         <div className="ChatMessageList w-full flex-grow overflow-y-auto pt-[60px] pb-4">
-            <div className="w-full flex flex-col items-center">
+            <div className="w-full flex flex-col items-center ">
                 {messages.map((msg, idx) => (
                     <div
                         key={idx}
@@ -15,24 +13,15 @@ const ChatMessageList = ({ webSearch, messages, loading, messagesEndRef }) => {
                                 : "justify-start"
                         }`}
                     >
-                        <div
+                        <p
                             className={`break-all break-words px-4 py-3 text-white text-[16px] font-[400] whitespace-pre-wrap ${
                                 msg.role === "user"
-                                    ? "bg-bg-secondary max-w-[var(--user-chat-width,70%)] rounded-3xl px-5 py-2.5 mx-4"
+                                    ? "bg-bg-secondary max-w-[var(--user-chat-width,70%)]  rounded-3xl px-5 py-2.5 mx-4"
                                     : "bg-transparent leading-[28px]"
                             }`}
                         >
-                            {msg.role === "user" ? (
-                                msg?.content[0]?.text?.value || "[No content]"
-                            ) : (
-                                <MarkdownRenderer
-                                    content={
-                                        msg?.content[0]?.text?.value ||
-                                        "[No content]"
-                                    }
-                                />
-                            )}
-                        </div>
+                            {msg?.content[0]?.text?.value || "[No content]"}
+                        </p>
                     </div>
                 ))}
                 <div ref={messagesEndRef} />
