@@ -2,7 +2,7 @@ import React from "react";
 
 const ChatMessageList = ({ webSearch, messages, loading, messagesEndRef }) => {
     return (
-        <div className="ChatMessageList w-full flex-grow overflow-y-auto pt-[50px] pb-4">
+        <div className="ChatMessageList w-full flex-grow overflow-y-auto pt-[60px] pb-4">
             <div className="w-full flex flex-col items-center ">
                 {messages.map((msg, idx) => (
                     <div

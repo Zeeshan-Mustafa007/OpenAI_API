@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import TextareaAutosize from "react-textarea-autosize";
 import submit_icon from "../assets/svgs/submit_icon.svg";
 
@@ -14,6 +14,37 @@ const ChatInput = ({
     setWebSearch,
     loading,
 }) => {
+    const fileInputRef = useRef(null);
+    const imageInputRef = useRef(null);
+
+    const handleFileRemove = () => {
+        setFile(null);
+        if (fileInputRef.current) {
+            fileInputRef.current.value = ""; // Clear the file input value
+        }
+    };
+
+    const handleImageRemove = () => {
+        setImage(null);
+        if (imageInputRef.current) {
+            imageInputRef.current.value = ""; // Clear the image input value
+        }
+    };
+
+    const handleFileChange = (e) => {
+        setFile(e.target.files[0]);
+        if (fileInputRef.current) {
+            fileInputRef.current.value = ""; // Reset the input value after setting the file
+        }
+    };
+
+    const handleImageChange = (e) => {
+        setImage(e.target.files[0]);
+        if (imageInputRef.current) {
+            imageInputRef.current.value = ""; // Reset the input value after setting the image
+        }
+    };
+
     const handleSubmit = (e) => {
         e.preventDefault();
         onSubmit();
@@ -36,7 +67,7 @@ const ChatInput = ({
                                     </span>
                                     <button
                                         type="button"
-                                        onClick={() => setFile(null)}
+                                        onClick={handleFileRemove}
                                         className="text-text-tertiary hover:text-white"
                                     >
                                         <svg
@@ -60,7 +91,7 @@ const ChatInput = ({
                                     </span>
                                     <button
                                         type="button"
-                                        onClick={() => setImage(null)}
+                                        onClick={handleImageRemove}
                                         className="text-text-tertiary hover:text-white"
                                     >
                                         <svg
@@ -118,10 +149,9 @@ const ChatInput = ({
                                     disabled={webSearch}
                                     type="file"
                                     accept="image/*"
+                                    ref={imageInputRef}
                                     className="hidden"
-                                    onChange={(e) =>
-                                        setImage(e.target.files[0])
-                                    }
+                                    onChange={handleImageChange}
                                 />
                             </label>
                             {webSearch ? (
@@ -154,8 +184,9 @@ const ChatInput = ({
                                 <input
                                     disabled={webSearch}
                                     type="file"
+                                    ref={fileInputRef}
                                     className="hidden"
-                                    onChange={(e) => setFile(e.target.files[0])}
+                                    onChange={handleFileChange}
                                 />
                             </label>
                             {webSearch ? (

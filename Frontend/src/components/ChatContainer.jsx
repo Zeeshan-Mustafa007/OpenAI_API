@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import ChatMessageList from "./ChatMessageList";
 import ChatInput from "./ChatInput";
-import Header from "./header";
+import Header from "./Header";
+import { fetchChatHistory, uploadChatData } from "../services/backendRequests";
 
 const ChatContainer = () => {
     const [text, setText] = useState("");
@@ -13,23 +14,17 @@ const ChatContainer = () => {
     const [reason, setReason] = useState(false);
     const messagesEndRef = useRef(null);
 
-    const fetchChatHistory = async () => {
+    const loadChatHistory = async () => {
         try {
-            // const res = await fetch("http://localhost:5000/chat/history");
-            const res = await fetch(
-                "https://chatbackend.brainyte.com/chat/history"
-            );
-            const data = await res.json();
-            if (Array.isArray(data.messages)) {
-                setChatHistory(data.messages);
-            }
+            const messages = await fetchChatHistory();
+            setChatHistory(messages);
         } catch (error) {
-            console.error("Error fetching chat history:", error);
+            console.error("Failed to load chat history:", error);
         }
     };
 
     useEffect(() => {
-        fetchChatHistory();
+        loadChatHistory();
     }, []);
 
     useEffect(() => {
@@ -37,46 +32,24 @@ const ChatContainer = () => {
     }, [chatHistory, loading]);
 
     const handleSubmit = async () => {
-        const formData = new FormData();
-        formData.append("text", text);
-        formData.append("webSearch", webSearch);
-        if (image) formData.append("image", image);
-        if (file) formData.append("file", file);
-
         setLoading(true);
 
         try {
-            const res = await fetch(
-                "https://chatbackend.brainyte.com/chat/upload",
-                {
-                    method: "POST",
-                    body: formData,
-                }
-            );
-            const data = await res.json();
-            if (data.error) {
-                throw new Error(data.error);
-            }
-            await fetchChatHistory();
+            await uploadChatData({ text, webSearch, image, file });
+            await loadChatHistory();
             setText("");
-            setImage(null);
-            setFile(null);
-        } catch (err) {
-            console.error("Upload error:", err);
-            setText("");
-            setImage(null);
-            setFile(null);
+            setImage(null); // Reset only on success
+            setFile(null);  // Reset only on success
+        } catch (error) {
+            console.error("Upload error:", error);
         } finally {
             setLoading(false);
-            setText("");
-            setImage(null);
-            setFile(null);
         }
     };
 
     return (
-        <div className="ChatContainer ">
-            <div className="flex items-center justify-center h-screen flex-col">
+        <div className="ChatContainer">
+            <div className="flex items-center justify-center h-dvh flex-col">
                 <div className="absolute top-0 w-full bg-bg-primary lg:bg-transparent">
                     <Header />
                 </div>

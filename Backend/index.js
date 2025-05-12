@@ -3,18 +3,17 @@ const cors = require("cors");
 const multer = require("multer");
 
 const app = express();
-const PORT = 5000;
+const PORT = 8080;
 
-app.use(
-    cors({
-        origin: "http://localhost:5173",
-        credentials: true,
-    })
-);
+app.use(cors());
 
 app.use(express.json());
 
 // 🔁 Check thread on server start
+
+app.get("/", (req, res) => {
+    res.send("Server is running...\n");
+});
 
 const upload = multer();
 app.use(
