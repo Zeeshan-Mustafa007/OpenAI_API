@@ -1,7 +1,10 @@
 
-const BASE_URL = import.meta.env.VITE_DEV_BACKEND_URL;
+const BASE_URL =
+    import.meta.env.MODE === "development"
+        ? import.meta.env.VITE_DEV_BACKEND_URL
+        : import.meta.env.VITE_PROD_BACKEND_URL;
 
-console.log("Backend URL:", BASE_URL);
+// console.log("Backend URL:", BASE_URL);
 if (!BASE_URL) {
     throw new Error(
         "Backend URL is not defined. Please set the BACKEND_URL environment variable."
