@@ -3,6 +3,7 @@ import React from "react";
 import MarkdownRenderer from "./MarkdownRenderer";
 
 const ChatMessageList = ({ webSearch, messages, loading, messagesEndRef }) => {
+    console.log("Last message:", messages[messages.length - 1].content[0]?.text?.value);
     return (
         <div className="ChatMessageList w-full flex-grow overflow-y-auto pt-[60px] pb-4">
             <div className="w-full flex flex-col items-center">
