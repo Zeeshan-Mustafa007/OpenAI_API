@@ -50,7 +50,7 @@ const ChatContainer = () => {
     return (
         <div className="ChatContainer">
             <div className="flex items-center justify-center h-dvh flex-col">
-                <div className="absolute top-0 w-full bg-bg-primary lg:bg-transparent">
+                <div className="absolute top-0 z-30  w-full bg-bg-primary lg:bg-transparent">
                     <Header />
                 </div>
                 {chatHistory.length === 0 && !loading && (
