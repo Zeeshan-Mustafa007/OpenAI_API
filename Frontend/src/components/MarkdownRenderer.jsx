@@ -43,23 +43,37 @@ const MarkdownRenderer = ({ content }) => {
                     );
                 },
                 h1: ({ node, ...props }) => (
-                    <h1 className="text-2xl  font-normal" {...props} />
+                    <h1 className="text-2xl leading-relaxed font-normal" {...props} />
                 ),
                 h2: ({ node, ...props }) => (
-                    <h2 className="text-xl  font-normal" {...props} />
+                    <h2 className="text-xl leading-relaxed font-normal" {...props} />
                 ),
                 h3: ({ node, ...props }) => (
-                    <h3 className="text-lg  font-normal" {...props} />
+                    <h3 className="text-lg leading-relaxed font-normal" {...props} />
                 ),
                 p: ({ node, ...props }) => (
-                    <p className="leading-relaxed" {...props} />
+                    <p className="leading-relaxed font-normal" {...props} />
                 ),
                 li: ({ node, ...props }) => (
-                    <li className="ml-6 list-disc" {...props} />
+                    <li
+                        className="relative leading-relaxed ml-6 list-disc"
+                        {...props}
+                    />
                 ),
-                ul: ({ node, ...props }) => <ul className="" {...props} />,
+                ul: ({ node, ...props }) => (
+                    <ul className="list-disc leading-relaxed" {...props} />
+                ),
                 ol: ({ node, ...props }) => (
-                    <ol className=" list-decimal ml-6" {...props} />
+                    <ol
+                        className=" list-decimal ml-6 leading-relaxed"
+                        {...props}
+                    />
+                ),
+                strong: ({ node, ...props }) => (
+                    <strong className="font-semibold" {...props} />
+                ),
+                hr: ({ node, ...props }) => (
+                    <hr className="border-t border-bg-tertiary my-4" />
                 ),
                 blockquote: ({ node, ...props }) => (
                     <blockquote
