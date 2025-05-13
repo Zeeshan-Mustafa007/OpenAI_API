@@ -32,12 +32,12 @@ const MarkdownRenderer = ({ content }) => {
                     const codeString = String(children).replace(/\n$/, "");
 
                     return !inline && match ? (
-                        <div className="my-4 relative rounded-lg border border-bg-tertiary bg-bg-scrim">
-                            <div className="flex w-full font-sans justify-between items-center bg-bg-secondary text-white text-xs px-3 py-2 border-b border-bg-primary">
+                        <div className="my-4 relative w-full rounded-lg border border-bg-tertiary bg-bg-scrim">
+                            <div className="flex font-sans justify-between items-center bg-bg-secondary text-white text-xs px-3 py-2 border-b border-bg-primary">
                                 <span>{language.toUpperCase()}</span>
                             </div>
                             <div className="sticky top-9">
-                                <div className="flex w-fit absolute bottom-[6px] right-2 z-10 items-center gap-8 bg-bg-secondary px-3 py-0.5 rounded">
+                                <div className="flex absolute bottom-[6px] right-2 z-10 items-center gap-8 bg-bg-secondary px-3 py-0.5 rounded">
                                     {/* Copy Code Button */}
                                     <button
                                         onClick={() =>
@@ -81,22 +81,28 @@ const MarkdownRenderer = ({ content }) => {
                                     </button>
                                 </div>
                             </div>
-                            <SyntaxHighlighter
-                                style={vscDarkPlus}
-                                language={language}
-                                PreTag="div"
-                                customStyle={{
-                                    margin: 0,
-                                    background: "transparent",
-                                }}
-                                {...props}
-                            >
-                                {codeString}
-                            </SyntaxHighlighter>
+                            <div className="overflow-x-auto ">
+                                <pre className="min-w-full overflow-x-auto">
+                                    <SyntaxHighlighter
+                                        style={vscDarkPlus}
+                                        language={language}
+                                        PreTag="div"
+                                        customStyle={{
+                                            margin: 0,
+                                            background: "transparent",
+                                            whiteSpace: "pre",
+                                            overflowX: "auto",
+                                        }}
+                                        {...props}
+                                    >
+                                        {codeString}
+                                    </SyntaxHighlighter>
+                                </pre>
+                            </div>
                         </div>
                     ) : (
                         <code
-                            className="bg-bg-tertiary break-all break-words whitespace-pre-wrap text-white px-1 py-0.5 rounded"
+                            className="bg-bg-tertiary break-normal break-words text-wrap text-white px-1 py-0.5 rounded"
                             {...props}
                         >
                             {children}
@@ -122,7 +128,10 @@ const MarkdownRenderer = ({ content }) => {
                     />
                 ),
                 p: ({ node, ...props }) => (
-                    <p className="leading-relaxed font-normal" {...props} />
+                    <p
+                        className="!break-normal !whitespace-normal leading-relaxed font-normal"
+                        {...props}
+                    />
                 ),
                 li: ({ node, ...props }) => (
                     <li
@@ -152,12 +161,14 @@ const MarkdownRenderer = ({ content }) => {
                     />
                 ),
                 a: ({ node, ...props }) => (
-                    <a
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-text-secondary text-nowrap bg-bg-tertiary rounded-full align-text-top px-3 pt-0.5 pb-1 hover:underline"
-                        {...props}
-                    />
+                    <div className="bg-bg-tertiary inline-flex rounded-full w-fit px-5 pt-1 pb-1.5 ">
+                        <a
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-text-secondary break-normal text-wrap hover:underline"
+                            {...props}
+                        />
+                    </div>
                 ),
             }}
         >
