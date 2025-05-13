@@ -2,7 +2,9 @@
 import React, { useState } from "react";
 import ReactMarkdown from "react-markdown";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
-import { vscDarkPlus } from "react-syntax-highlighter/dist/esm/styles/prism";
+import {
+    vscDarkPlus
+} from "react-syntax-highlighter/dist/esm/styles/prism";
 import remarkGfm from "remark-gfm";
 import rehypeRaw from "rehype-raw";
 import copy_icon from "../assets/svgs/copy_icon.svg";
@@ -108,7 +110,7 @@ const MarkdownRenderer = ({ content }) => {
                                 <div className="overflow-x-auto ">
                                     <pre className="min-w-full overflow-x-auto">
                                         <SyntaxHighlighter
-                                            style={vscDarkPlus}
+                                            style={ vscDarkPlus }
                                             language={language}
                                             PreTag="div"
                                             customStyle={{
@@ -135,13 +137,13 @@ const MarkdownRenderer = ({ content }) => {
                     },
                     h1: ({ node, ...props }) => (
                         <h1
-                            className="text-2xl leading-relaxed font-normal"
+                            className="text-2xl leading-relaxed font-semibold"
                             {...props}
                         />
                     ),
                     h2: ({ node, ...props }) => (
                         <h2
-                            className="text-xl leading-relaxed font-normal"
+                            className="text-xl leading-relaxed font-semibold"
                             {...props}
                         />
                     ),
