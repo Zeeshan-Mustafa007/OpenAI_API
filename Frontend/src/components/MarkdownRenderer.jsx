@@ -2,9 +2,7 @@
 import React, { useState } from "react";
 import ReactMarkdown from "react-markdown";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
-import {
-    vscDarkPlus
-} from "react-syntax-highlighter/dist/esm/styles/prism";
+import { vscDarkPlus } from "react-syntax-highlighter/dist/esm/styles/prism";
 import remarkGfm from "remark-gfm";
 import rehypeRaw from "rehype-raw";
 import copy_icon from "../assets/svgs/copy_icon.svg";
@@ -50,9 +48,20 @@ const MarkdownRenderer = ({ content }) => {
                 rehypePlugins={[rehypeRaw]}
                 components={{
                     code({ node, inline, className, children, ...props }) {
+                        const [copied, setCopied] = useState(false);
                         const match = /language-(\w+)/.exec(className || "");
                         const language = match ? match[1] : "";
                         const codeString = String(children).replace(/\n$/, "");
+
+                        const handleCopy = async (text, setCopied) => {
+                            try {
+                                await navigator.clipboard.writeText(text);
+                                setCopied(true);
+                                setTimeout(() => setCopied(false), 2000);
+                            } catch (err) {
+                                console.error("Copy failed", err);
+                            }
+                        };
 
                         return !inline && match ? (
                             <div className="my-4 relative w-full rounded-lg border border-bg-tertiary bg-bg-scrim">
@@ -110,7 +119,7 @@ const MarkdownRenderer = ({ content }) => {
                                 <div className="overflow-x-auto ">
                                     <pre className="min-w-full overflow-x-auto">
                                         <SyntaxHighlighter
-                                            style={ vscDarkPlus }
+                                            style={vscDarkPlus}
                                             language={language}
                                             PreTag="div"
                                             customStyle={{
@@ -187,14 +196,14 @@ const MarkdownRenderer = ({ content }) => {
                         />
                     ),
                     a: ({ node, ...props }) => (
-                        <div className="bg-bg-tertiary inline-flex rounded-full w-fit px-5 pt-1 pb-1.5 ">
+                        <span className="bg-bg-tertiary inline-flex rounded-full w-fit px-5 pt-1 pb-1.5 ">
                             <a
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="text-text-secondary break-normal text-wrap hover:underline"
                                 {...props}
                             />
-                        </div>
+                        </span>
                     ),
                 }}
             >
