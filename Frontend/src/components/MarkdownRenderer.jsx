@@ -56,8 +56,8 @@ const MarkdownRenderer = ({ content }) => {
 
                         return !inline && match ? (
                             <div className="my-4 relative w-full rounded-lg border border-bg-tertiary bg-bg-scrim">
-                                <div className="flex font-sans justify-between items-center bg-bg-secondary text-white text-xs px-3 py-2 border-b border-bg-primary">
-                                    <span>{language.toUpperCase()}</span>
+                                <div className="flex font-sans rounded-t-lg justify-between items-center bg-bg-secondary text-white text-xs px-3 py-2 border-b border-bg-primary">
+                                    <span>{language.toLowerCase()}</span>
                                 </div>
                                 <div className="sticky top-9">
                                     <div className="flex absolute bottom-[6px] right-2 z-10 items-center gap-8 bg-bg-secondary px-3 py-0.5 rounded">
