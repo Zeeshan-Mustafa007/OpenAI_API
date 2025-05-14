@@ -6,7 +6,7 @@ import { vscDarkPlus } from "react-syntax-highlighter/dist/esm/styles/prism";
 import remarkGfm from "remark-gfm";
 import rehypeRaw from "rehype-raw";
 import copy_icon from "../assets/svgs/copy_icon.svg";
-import copied_icon from "../assets/svgs/copied_icon.svg";
+import tick_icon from "../assets/svgs/tick_icon.svg";
 import editCode_icon from "../assets/svgs/editCode_icon.svg";
 import CodeEditor from "./CodeEditor";
 
@@ -84,7 +84,7 @@ const MarkdownRenderer = ({ content }) => {
                                                 <>
                                                     <img
                                                         className="h-3 w-3"
-                                                        src={copied_icon}
+                                                        src={tick_icon}
                                                         alt="Copied"
                                                     />{" "}
                                                     <span>Copied</span>

@@ -2,12 +2,27 @@
 import React, { useState } from "react";
 import MonacoEditor from "@monaco-editor/react";
 import copy_icon from "../assets/svgs/copy_icon.svg";
-import copied_icon from "../assets/svgs/copied_icon.svg";
+import tick_icon from "../assets/svgs/tick_icon.svg";
 import download_icon from "../assets/svgs/download_icon.svg";
 import close_icon from "../assets/svgs/close_icon.svg";
+import { downloadCode } from "../services/helper";
 
 const CodeEditor = ({ code, language, onChange, onClose }) => {
     const [codeCopied, setCodeCopied] = useState(false);
+    const [download, setDownload] = useState(false);
+
+    const handleDownload = async () => {
+        try {
+            const downloaded = await downloadCode(code, language);
+            if (downloaded) {
+                throw new Error("File Not Downloaded.");
+            }
+            setDownload(true);
+            setTimeout(() => setDownload(false), 2000);
+        } catch (err) {
+            console.error("Download failed", err);
+        }
+    };
     const handleCopy = async () => {
         try {
             await navigator.clipboard.writeText(code);
@@ -25,11 +40,38 @@ const CodeEditor = ({ code, language, onChange, onClose }) => {
                     Editor
                 </h2>
                 <div className="flex justify-center items-center">
+                    {/* Download Code Button  */}
+                    {download === true ? (
+                        <div className="p-2">
+                            <img
+                                className="h-[24px] w-[24px]"
+                                src={tick_icon}
+                                alt="Downloaded"
+                            />
+                        </div>
+                    ) : (
+                        <button
+                            type="button"
+                            onClick={handleDownload}
+                            className="Sidebar_Icon relative group hover:cursor-pointer hover:bg-bg-tertiary p-2 rounded-lg"
+                        >
+                            <img
+                                src={download_icon}
+                                alt="Download Icon"
+                                className="w-[24px] h-[24px]"
+                            />
+                            <div className="absolute w-fit z-10 text-nowrap bottom-[-50px] left-[15px] transform -translate-x-1/2 mb-2 hidden group-hover:block group-hover:!opacity-100 bg-black text-white text-[12px] px-2 py-1 rounded">
+                                Download Code
+                            </div>
+                        </button>
+                    )}
+
+                    {/* Copy Button */}
                     {codeCopied === true ? (
                         <div className="p-2">
                             <img
                                 className="h-[24px] w-[24px]"
-                                src={copied_icon}
+                                src={tick_icon}
                                 alt="Copied"
                             />
                         </div>
@@ -44,12 +86,13 @@ const CodeEditor = ({ code, language, onChange, onClose }) => {
                                 alt="Copy Icon"
                                 className="w-[24px] h-[24px]"
                             />
-                            <div className="absolute w-fit z-10 text-nowrap bottom-[-40px] left-[15px] transform -translate-x-1/2 mb-2 hidden group-hover:block group-hover:!opacity-100 bg-black text-white text-[12px] px-2 py-1 rounded">
+                            <div className="absolute w-fit z-10 text-nowrap bottom-[-50px] left-[20px] transform -translate-x-1/2 mb-2 hidden group-hover:block group-hover:!opacity-100 bg-black text-white text-[12px] px-2 py-1 rounded">
                                 Copy Code
                             </div>
                         </button>
                     )}
 
+                    {/* Close Button  */}
                     <button
                         type="button"
                         onClick={onClose}
