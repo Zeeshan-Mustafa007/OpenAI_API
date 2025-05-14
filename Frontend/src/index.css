@@ -1,22 +1,26 @@
 @import "tailwindcss";
 
-
-p div{
+/* for links in a p tag */
+p span{
     vertical-align: middle;
-    padding: 0px 8px 0px 8px;
+    padding: 0px 6px 0px 6px;
 }
 
 p a {
     font-size: 12px;
     vertical-align: middle;
     text-decoration: none;
-    padding: 0px 8px 0px 8px;
 }
 
 
 li p {
     position: absolute;
     top: 0;
+}
+
+/* for code block in response */
+div code {
+    font-size: 14px !important;
 }
 
 
