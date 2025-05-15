@@ -2,7 +2,14 @@
 import React from "react";
 import MarkdownRenderer from "./MarkdownRenderer";
 
-const ChatMessageList = ({ webSearch, messages, loading, messagesEndRef }) => {
+const ChatMessageList = ({
+    file,
+    setFile,
+    webSearch,
+    messages,
+    loading,
+    messagesEndRef,
+}) => {
     return (
         <div className="ChatMessageList w-full flex-grow overflow-y-auto pt-[60px] pb-4">
             <div className="w-full flex flex-col items-center">
@@ -26,6 +33,8 @@ const ChatMessageList = ({ webSearch, messages, loading, messagesEndRef }) => {
                                 msg?.content[0]?.text?.value || "[No content]"
                             ) : (
                                 <MarkdownRenderer
+                                    file
+                                    setFile
                                     content={
                                         msg?.content[0]?.text?.value ||
                                         "[No content]"

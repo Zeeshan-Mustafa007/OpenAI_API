@@ -4,23 +4,30 @@ import MonacoEditor from "@monaco-editor/react";
 import copy_icon from "../assets/svgs/copy_icon.svg";
 import tick_icon from "../assets/svgs/tick_icon.svg";
 import download_icon from "../assets/svgs/download_icon.svg";
+import upload_icon from "../assets/svgs/upload_icon.svg"
 import close_icon from "../assets/svgs/close_icon.svg";
 import { downloadCode } from "../services/helper";
 
-const CodeEditor = ({ code, language, onChange, onClose }) => {
+const CodeEditor = ({ file, setFile, code, language, onChange, onClose }) => {
     const [codeCopied, setCodeCopied] = useState(false);
-    const [download, setDownload] = useState(false);
+    const [ download, setDownload ] = useState(false);
+    const [ uploadCode, setUploadCode ] = useState(false);
+    
+    const handleUploadFile = async () => {
+        // handle upload file.
+    }
 
     const handleDownload = async () => {
         try {
             const downloaded = await downloadCode(code, language);
             if (downloaded) {
-                throw new Error("File Not Downloaded.");
+                setDownload(true);
+                setTimeout(() => setDownload(false), 2000);
+            } else {
+                throw new Error("Download Failed!");
             }
-            setDownload(true);
-            setTimeout(() => setDownload(false), 2000);
         } catch (err) {
-            console.error("Download failed", err);
+            console.error(err);
         }
     };
     const handleCopy = async () => {
@@ -40,6 +47,32 @@ const CodeEditor = ({ code, language, onChange, onClose }) => {
                     Editor
                 </h2>
                 <div className="flex justify-center items-center">
+                    {/* Upload Code Button  */}
+                    {uploadCode === true ? (
+                        <div className="p-2">
+                            <img
+                                className="h-[24px] w-[24px]"
+                                src={tick_icon}
+                                alt="Uploaded"
+                            />
+                        </div>
+                    ) : (
+                        <button
+                            type="button"
+                            onClick={handleUploadFile}
+                            className="Sidebar_Icon relative group hover:cursor-pointer hover:bg-bg-tertiary p-2 rounded-lg"
+                        >
+                            <img
+                                src={upload_icon}
+                                alt="Upload Icon"
+                                className="w-[24px] h-[24px]"
+                            />
+                            <div className="absolute w-fit z-10 text-nowrap bottom-[-50px] left-[15px] transform -translate-x-1/2 mb-2 hidden group-hover:block group-hover:!opacity-100 bg-black text-white text-[12px] px-2 py-1 rounded">
+                                Upload Code
+                            </div>
+                        </button>
+                    ) }
+                    
                     {/* Download Code Button  */}
                     {download === true ? (
                         <div className="p-2">

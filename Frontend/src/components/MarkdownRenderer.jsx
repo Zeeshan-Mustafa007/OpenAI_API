@@ -10,7 +10,7 @@ import tick_icon from "../assets/svgs/tick_icon.svg";
 import editCode_icon from "../assets/svgs/editCode_icon.svg";
 import CodeEditor from "./CodeEditor";
 
-const MarkdownRenderer = ({ content }) => {
+const MarkdownRenderer = ({ file, setFile, content }) => {
     const [copied, setCopied] = useState(false);
     const [editorOpen, setEditorOpen] = useState(false);
     const [editorContent, setEditorContent] = useState("");
@@ -38,7 +38,6 @@ const MarkdownRenderer = ({ content }) => {
 
     const handleEditorChange = (value) => {
         setEditorContent(value);
-        // You can also update the original markdown content here if needed
     };
 
     return (
@@ -211,6 +210,8 @@ const MarkdownRenderer = ({ content }) => {
             </ReactMarkdown>
             {editorOpen && (
                 <CodeEditor
+                    file={file}
+                    setFile={setFile}
                     code={editorContent}
                     language={editorLanguage}
                     onChange={handleEditorChange}
