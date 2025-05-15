@@ -39,7 +39,7 @@ const ChatContainer = () => {
             await loadChatHistory();
             setText("");
             setImage(null); // Reset only on success
-            setFile(null);  // Reset only on success
+            setFile(null); // Reset only on success
         } catch (error) {
             console.error("Upload error:", error);
         } finally {
@@ -62,6 +62,8 @@ const ChatContainer = () => {
                 )}
                 {(chatHistory.length !== 0 || loading) && (
                     <ChatMessageList
+                        file={file}
+                        setFile={setFile}
                         webSearch={webSearch}
                         messages={chatHistory}
                         loading={loading}
