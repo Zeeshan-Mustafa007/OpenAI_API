@@ -1,6 +1,7 @@
 const mimeTypes = {
     javascript: "text/javascript",
     typescript: "application/typescript",
+    jsx: "text/jsx",
     python: "text/x-python",
     java: "text/x-java-source",
     csharp: "text/x-csharp",
@@ -31,6 +32,7 @@ const mimeTypes = {
 const extensions = {
     javascript: "js",
     typescript: "ts",
+    jsx: "jsx",
     python: "py",
     java: "java",
     csharp: "cs",
@@ -62,7 +64,7 @@ export const downloadCode = (filename, codeContent, language) => {
     try {
         // Remove any extension if present (anything after the last dot)
         const cleanFilename = filename.includes(".")
-            ? filename.substring(0, filename.lastIndexOf("."))
+            ? filename.substring(0, filename.indexOf("."))
             : filename;
 
         const mimeType = mimeTypes[language] || "text/plain";
@@ -73,8 +75,6 @@ export const downloadCode = (filename, codeContent, language) => {
 
         const link = document.createElement("a");
         link.href = url;
-        // const filename =
-        //     prompt("Enter filename (without extension):", "code") || "code";
         link.download = `${cleanFilename}.${extension}`;
 
         document.body.appendChild(link);
@@ -102,8 +102,7 @@ export const handleCodeEditorFileUpload = async (
     if (newFile) {
         setFile(newFile);
         return true;
-    }
-    else {
+    } else {
         return false;
     }
 };
