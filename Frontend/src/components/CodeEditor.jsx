@@ -17,15 +17,15 @@ const RenameFile = ({
     return (
         <div className="fixed top-0 z-60 left-0 h-full w-full backdrop-blur-sm">
             <div className="fixed top-[calc(50%-90px)] [@media(max-width:350px)]:left-[calc(50%-140px)] left-[calc(50%-175px)] h-[180px] bg-bg-elevated-secondary [@media(max-width:350px)]:w-[280px] w-[350px] rounded-[10px] border-[2px] border-bg-tertiary text-white ">
-                <p className="relative w-full bg-bg-primary rounded-t-[10px] p-[5px] px-[10px] text-[20px] font-medium">
-                    Rename File
+                <p className="relative w-full bg-bg-primary rounded-t-[10px] p-[5px] px-[10px] text-[16px] font-medium">
+                    Download File
                 </p>
-                <p className="w-full p-[5px] px-[10px] text-white">
+                <p className="w-full text-[14px] p-[5px] px-[10px] text-white">
                     Enter file name without extension
                 </p>
                 <div className=" w-[90%] mt-[10px]">
                     <input
-                        className="w-full text-text-secondary rounded-xl mx-4 px-4 py-2 focus:outline-none border border-bg-tertiary"
+                        className="w-full text-[14px] text-text-secondary rounded-xl mx-4 px-4 py-2 focus:outline-none border border-bg-tertiary"
                         type="text"
                         name="fileName"
                         value={fileName}
@@ -35,13 +35,13 @@ const RenameFile = ({
                 <div className="mt-[10px] flex w-full  justify-evenly">
                     <button
                         onClick={handleDownload}
-                        className="h-[30px] w-[120px] rounded-[3px] bg-bg-tertiary text-[0.625rem] font-normal leading-[9px] hover:border hover:border-bg-tertiary  hover:bg-transparent md:text-base md:leading-[30px]"
+                        className="h-[30px] w-[120px] rounded-[3px] bg-bg-tertiary text-[12px] font-normal leading-[9px] hover:border hover:border-bg-tertiary  hover:bg-transparent md:text-[14px] md:leading-[30px]"
                     >
                         Download
                     </button>
                     <button
                         onClick={() => setRenamePrompt(false)}
-                        className="h-[30px] w-[120px] rounded-[3px] bg-bg-tertiary text-[0.625rem] font-normal leading-[9px] hover:border hover:border-bg-tertiary  hover:bg-transparent md:text-base md:leading-[30px]"
+                        className="h-[30px] w-[120px] rounded-[3px] bg-bg-tertiary text-[12px] font-normal leading-[9px] hover:border hover:border-bg-tertiary  hover:bg-transparent md:text-[14px] md:leading-[30px]"
                     >
                         Close
                     </button>
