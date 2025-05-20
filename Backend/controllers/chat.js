@@ -149,14 +149,17 @@ async function uploadFile(text, file) {
         purpose: "user_data",
     });
 
+    console.log(uploadedFile);
+
     if (file && uploadedFile) {
         // Convert buffer to base64 string
         const base64String = file.buffer.toString("base64");
         const mimeType = file.mimetype || "application/octet-stream";
 
+
         const response = await openai.responses.create({
             model: "gpt-4.1",
-            tools: [{ type: "web_search_preview" }],
+            // tools: [{ type: "web_search_preview" }],
             input: [
                 {
                     role: "user",
@@ -176,19 +179,13 @@ async function uploadFile(text, file) {
         });
 
         // sending user message + file to thread
-        await openai.beta.threads.messages.create(THREAD_ID, {
+        const msg = await openai.beta.threads.messages.create(THREAD_ID, {
             role: "user",
             content: [
                 { type: "text", text: text.trim() || file?.originalname || "" },
             ],
-            attachments: [
-                {
-                    file_id: uploadedFile.id,
-                    tools: [{ type: "file_search" }],
-                },
-            ],
         });
-
+        
         // sending assistant response to thread
         await openai.beta.threads.messages.create(THREAD_ID, {
             role: "assistant",
@@ -203,14 +200,13 @@ async function uploadFile(text, file) {
 exports.upload = async (req, res) => {
     const { text, webSearch } = req.body;
     const image = req.files["image"]?.[0];
-    const file = req.files[ "file" ]?.[ 0 ];
-    
-    // console.log("chat.js");
-    // console.log("Received text:", text);
-    // console.log("Received webSearch:", webSearch);
-    // console.log("Received image:", image);
-    // console.log("Received file:", file);
+    const file = req.files["file"]?.[0];
 
+    console.log("chat.js");
+    console.log("Received text:", text);
+    console.log("Received webSearch:", webSearch);
+    console.log("Received image:", image);
+    console.log("Received file:", file);
 
     try {
         // text + image

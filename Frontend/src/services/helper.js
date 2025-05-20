@@ -1,6 +1,7 @@
 const mimeTypes = {
     javascript: "text/javascript",
     typescript: "application/typescript",
+    jsx: "text/jsx",
     python: "text/x-python",
     java: "text/x-java-source",
     csharp: "text/x-csharp",
@@ -31,6 +32,7 @@ const mimeTypes = {
 const extensions = {
     javascript: "js",
     typescript: "ts",
+    jsx: "jsx",
     python: "py",
     java: "java",
     csharp: "cs",
@@ -57,8 +59,14 @@ const extensions = {
     dart: "dart",
     lua: "lua",
 };
-export const downloadCode = (codeContent, language) => {
+
+export const downloadCode = (filename, codeContent, language) => {
     try {
+        // Remove any extension if present (anything after the last dot)
+        const cleanFilename = filename.includes(".")
+            ? filename.substring(0, filename.indexOf("."))
+            : filename;
+
         const mimeType = mimeTypes[language] || "text/plain";
         const extension = extensions[language] || "txt";
 
@@ -67,9 +75,7 @@ export const downloadCode = (codeContent, language) => {
 
         const link = document.createElement("a");
         link.href = url;
-        const filename =
-            prompt("Enter filename (without extension):", "code") || "code";
-        link.download = `${filename}.${extension}`;
+        link.download = `${cleanFilename}.${extension}`;
 
         document.body.appendChild(link);
         link.click();
@@ -82,6 +88,21 @@ export const downloadCode = (codeContent, language) => {
     }
 };
 
-export const handleCodeEditorFileUpload = async (file, setFile, code, language) => {};
-
-
+export const handleCodeEditorFileUpload = async (
+    file,
+    setFile,
+    code,
+    language
+) => {
+    const mimeType = mimeTypes[language] || "text/plain";
+    const extension = extensions[language] || "txt";
+    const newFile = new File([code], `code.${extension}`, {
+        type: mimeType,
+    });
+    if (newFile) {
+        setFile(newFile);
+        return true;
+    } else {
+        return false;
+    }
+};

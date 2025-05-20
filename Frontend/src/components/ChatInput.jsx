@@ -32,6 +32,7 @@ const ChatInput = ({
     };
 
     const handleFileChange = (e) => {
+        console.log("File Uploaded");
         setFile(e.target.files[0]);
         if (fileInputRef.current) {
             fileInputRef.current.value = ""; // Reset the input value after setting the file
