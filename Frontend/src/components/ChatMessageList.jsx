@@ -33,8 +33,8 @@ const ChatMessageList = ({
                                 msg?.content[0]?.text?.value || "[No content]"
                             ) : (
                                 <MarkdownRenderer
-                                    file
-                                    setFile
+                                    file={file}
+                                    setFile={setFile}
                                     content={
                                         msg?.content[0]?.text?.value ||
                                         "[No content]"

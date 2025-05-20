@@ -57,6 +57,7 @@ const extensions = {
     dart: "dart",
     lua: "lua",
 };
+
 export const downloadCode = (filename, codeContent, language) => {
     try {
         // Remove any extension if present (anything after the last dot)
@@ -92,4 +93,17 @@ export const handleCodeEditorFileUpload = async (
     setFile,
     code,
     language
-) => {};
+) => {
+    const mimeType = mimeTypes[language] || "text/plain";
+    const extension = extensions[language] || "txt";
+    const newFile = new File([code], `code.${extension}`, {
+        type: mimeType,
+    });
+    if (newFile) {
+        setFile(newFile);
+        return true;
+    }
+    else {
+        return false;
+    }
+};

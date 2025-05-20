@@ -6,7 +6,7 @@ import tick_icon from "../assets/svgs/tick_icon.svg";
 import download_icon from "../assets/svgs/download_icon.svg";
 import upload_icon from "../assets/svgs/upload_icon.svg";
 import close_icon from "../assets/svgs/close_icon.svg";
-import { downloadCode } from "../services/helper";
+import { downloadCode, handleCodeEditorFileUpload } from "../services/helper";
 
 const RenameFile = ({
     fileName,
@@ -16,8 +16,8 @@ const RenameFile = ({
 }) => {
     return (
         <div className="fixed top-0 z-60 left-0 h-full w-full backdrop-blur-sm">
-            <div className="fixed top-[calc(50%-90px)] [@media(max-width:350px)]:left-[calc(50%-140px)] left-[calc(50%-175px)] h-[180px] bg-bg-scrim [@media(max-width:350px)]:w-[280px] w-[350px] rounded-[10px] border-[2px] border-bg-tertiary text-white ">
-                <p className="text-barlow relative w-full bg-bg-primary rounded-t-[10px] p-[5px] px-[10px] text-[20px] font-medium">
+            <div className="fixed top-[calc(50%-90px)] [@media(max-width:350px)]:left-[calc(50%-140px)] left-[calc(50%-175px)] h-[180px] bg-bg-elevated-secondary [@media(max-width:350px)]:w-[280px] w-[350px] rounded-[10px] border-[2px] border-bg-tertiary text-white ">
+                <p className="relative w-full bg-bg-primary rounded-t-[10px] p-[5px] px-[10px] text-[20px] font-medium">
                     Rename File
                 </p>
                 <p className="w-full p-[5px] px-[10px] text-white">
@@ -56,10 +56,26 @@ const CodeEditor = ({ file, setFile, code, language, onChange, onClose }) => {
     const [download, setDownload] = useState(false);
     const [fileName, setFileName] = useState("code");
     const [renamePrompt, setRenamePrompt] = useState(false);
-    const [uploadCode, setUploadCode] = useState(false);
+    // const [uploadCode, setUploadCode] = useState(false);
 
     const handleUploadFile = async () => {
-        // handle upload file.
+        try {
+            const uploaded = await handleCodeEditorFileUpload(
+                file,
+                setFile,
+                code,
+                language
+            );
+            if (uploaded) {
+                // setUploadCode(true);
+                // await setTimeout(() => setUploadCode(false), 1000);
+                onClose();
+            } else {
+                throw new Error("Upload Failed!");
+            }
+        } catch (err) {
+            console.error(err);
+        }
     };
 
     const handleDownload = async () => {
@@ -104,7 +120,7 @@ const CodeEditor = ({ file, setFile, code, language, onChange, onClose }) => {
                     </h2>
                     <div className="flex justify-center items-center">
                         {/* Upload Code Button  */}
-                        {uploadCode === true ? (
+                        {/* {uploadCode === true ? (
                             <div className="p-2">
                                 <img
                                     className="h-[24px] w-[24px]"
@@ -112,22 +128,22 @@ const CodeEditor = ({ file, setFile, code, language, onChange, onClose }) => {
                                     alt="Uploaded"
                                 />
                             </div>
-                        ) : (
-                            <button
-                                type="button"
-                                onClick={handleUploadFile}
-                                className="Sidebar_Icon relative group hover:cursor-pointer hover:bg-bg-tertiary p-2 rounded-lg"
-                            >
-                                <img
-                                    src={upload_icon}
-                                    alt="Upload Icon"
-                                    className="w-[24px] h-[24px]"
-                                />
-                                <div className="absolute w-fit z-10 text-nowrap bottom-[-50px] left-[15px] transform -translate-x-1/2 mb-2 hidden group-hover:block group-hover:!opacity-100 bg-black text-white text-[12px] px-2 py-1 rounded">
-                                    Upload Code
-                                </div>
-                            </button>
-                        )}
+                        ) : ( */}
+                        <button
+                            type="button"
+                            onClick={handleUploadFile}
+                            className="Sidebar_Icon relative group hover:cursor-pointer hover:bg-bg-tertiary p-2 rounded-lg"
+                        >
+                            <img
+                                src={upload_icon}
+                                alt="Upload Icon"
+                                className="w-[24px] h-[24px]"
+                            />
+                            <div className="absolute w-fit z-10 text-nowrap bottom-[-50px] left-[15px] transform -translate-x-1/2 mb-2 hidden group-hover:block group-hover:!opacity-100 bg-black text-white text-[12px] px-2 py-1 rounded">
+                                Upload Code
+                            </div>
+                        </button>
+                        {/* )} */}
 
                         {/* Download Code Button  */}
                         {download === true ? (
@@ -197,7 +213,9 @@ const CodeEditor = ({ file, setFile, code, language, onChange, onClose }) => {
                 </div>
                 <MonacoEditor
                     height="calc(100% - 50px)"
-                    defaultLanguage={language}
+                    defaultLanguage={
+                        language === "jsx" ? "javascript" : language
+                    }
                     value={code}
                     theme="vs-dark"
                     onChange={onChange}
