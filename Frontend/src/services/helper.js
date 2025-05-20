@@ -57,8 +57,13 @@ const extensions = {
     dart: "dart",
     lua: "lua",
 };
-export const downloadCode = (codeContent, language) => {
+export const downloadCode = (filename, codeContent, language) => {
     try {
+        // Remove any extension if present (anything after the last dot)
+        const cleanFilename = filename.includes(".")
+            ? filename.substring(0, filename.lastIndexOf("."))
+            : filename;
+
         const mimeType = mimeTypes[language] || "text/plain";
         const extension = extensions[language] || "txt";
 
@@ -67,9 +72,9 @@ export const downloadCode = (codeContent, language) => {
 
         const link = document.createElement("a");
         link.href = url;
-        const filename =
-            prompt("Enter filename (without extension):", "code") || "code";
-        link.download = `${filename}.${extension}`;
+        // const filename =
+        //     prompt("Enter filename (without extension):", "code") || "code";
+        link.download = `${cleanFilename}.${extension}`;
 
         document.body.appendChild(link);
         link.click();
@@ -82,6 +87,9 @@ export const downloadCode = (codeContent, language) => {
     }
 };
 
-export const handleCodeEditorFileUpload = async (file, setFile, code, language) => {};
-
-
+export const handleCodeEditorFileUpload = async (
+    file,
+    setFile,
+    code,
+    language
+) => {};
