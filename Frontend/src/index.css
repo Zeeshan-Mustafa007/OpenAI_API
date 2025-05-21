@@ -6,6 +6,11 @@ p span{
     padding: 0px 6px 0px 6px;
 }
 
+li span{
+    vertical-align: middle;
+    padding: 0px 6px 0px 6px;
+}
+
 p a {
     font-size: 12px;
     vertical-align: middle;
