@@ -1,16 +1,28 @@
-import React from "react";
+import React, { useState } from "react";
+import { GoogleLogin } from "@react-oauth/google";
+import { jwtDecode } from "jwt-decode";
 import sidebar_icon from "../assets/svgs/sidebar_icon.svg";
 import newChat_icon from "../assets/svgs/newChat_icon.svg";
+import { googleLogin } from "../services/backendRequests";
 
 const Header = () => {
+    const [userData, setUserData] = useState({
+        name: "",
+        email: "",
+        pic: "",
+        isAvailable: false,
+    });
+
     const handleNewChat = () => {
-        
         console.log("New chat created");
     };
     return (
-        <div className="Header text-white flex font-semibold">
+        <div className="Header text-white flex justify-between font-semibold">
             <div className="flex mx-3 my-2">
-                <button type="button" className="Sidebar_Icon relative group hover:cursor-pointer hover:bg-bg-tertiary p-2 rounded-lg">
+                <button
+                    type="button"
+                    className="Sidebar_Icon relative group hover:cursor-pointer hover:bg-bg-tertiary p-2 rounded-lg"
+                >
                     <img
                         src={sidebar_icon}
                         alt="Sidebar Icon"
@@ -20,7 +32,11 @@ const Header = () => {
                         Open Sidebar
                     </div>
                 </button>
-                <button onClick={handleNewChat} type="button" className="NewChat_Icon relative group hover:cursor-pointer hover:bg-bg-tertiary p-2 rounded-lg">
+                <button
+                    onClick={handleNewChat}
+                    type="button"
+                    className="NewChat_Icon relative group hover:cursor-pointer hover:bg-bg-tertiary p-2 rounded-lg"
+                >
                     <img
                         src={newChat_icon}
                         alt="New Chat Icon"
@@ -30,6 +46,30 @@ const Header = () => {
                         New Chat
                     </div>
                 </button>
+            </div>
+            <div className="login  flex justify-center items-center mx-3">
+                <div className="google-login">
+                    <GoogleLogin
+                        onSuccess={async (credentialResponse) => {
+                            // console.log(credentialResponse);
+                            // console.log(
+                            //     jwtDecode(credentialResponse.credential)
+                            // );
+                            const response = await googleLogin(
+                                credentialResponse
+                            );
+                            console.log("Back with login response.");
+                            console.log(response);
+                        }}
+                        onError={() => {
+                            console.log("Login Failed");
+                        }}
+                        type="icon"
+                        theme="filled_black"
+                        shape="circle"
+                        ux_mode="popup"
+                    />
+                </div>
             </div>
         </div>
     );

@@ -1,4 +1,3 @@
-
 const BASE_URL =
     import.meta.env.MODE === "development"
         ? import.meta.env.VITE_DEV_BACKEND_URL
@@ -10,6 +9,8 @@ if (!BASE_URL) {
         "Backend URL is not defined. Please set the BACKEND_URL environment variable."
     );
 }
+
+// CHAT
 
 export const fetchChatHistory = async () => {
     try {
@@ -44,6 +45,30 @@ export const uploadChatData = async ({ text, webSearch, image, file }) => {
         return data;
     } catch (error) {
         console.error("Error uploading chat data:", error);
+        throw error;
+    }
+};
+
+// USERS
+
+export const googleLogin = async (response) => {
+    try {
+        const res = await fetch(`${BASE_URL}/user/googleLogin`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ response: response }),
+        });
+        const data = await res.json();
+        console.log("Back with server response.");
+        console.log(data);
+        if (data.error) {
+            throw new Error(data.error);
+        }
+        return data;
+    } catch (error) {
+        console.error("Error logging user:", error);
         throw error;
     }
 };
