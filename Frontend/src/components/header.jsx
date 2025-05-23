@@ -1,21 +1,38 @@
 import React, { useState } from "react";
-import { GoogleLogin } from "@react-oauth/google";
+import { useGoogleLogin } from "@react-oauth/google";
 import { jwtDecode } from "jwt-decode";
 import sidebar_icon from "../assets/svgs/sidebar_icon.svg";
 import newChat_icon from "../assets/svgs/newChat_icon.svg";
 import { googleLogin } from "../services/backendRequests";
 
 const Header = () => {
+    const [googleTokens, setGoogleTokens] = useState();
     const [userData, setUserData] = useState({
         name: "",
         email: "",
-        pic: "",
+        picture: "",
         isAvailable: false,
     });
 
     const handleNewChat = () => {
         console.log("New chat created");
     };
+
+    const handleGoogleLogin = useGoogleLogin({
+        onSuccess: async ({ code }) => {
+            const tokens = await googleLogin(code);
+            setGoogleTokens(tokens);
+            const userInfo = await jwtDecode(tokens.id_token);
+            setUserData({
+                name: userInfo.name,
+                email: userInfo.email,
+                picture: userInfo.picture,
+                isAvailable: true,
+            });
+        },
+        flow: "auth-code",
+    });
+
     return (
         <div className="Header text-white flex justify-between font-semibold">
             <div className="flex mx-3 my-2">
@@ -49,26 +66,28 @@ const Header = () => {
             </div>
             <div className="login  flex justify-center items-center mx-3">
                 <div className="google-login">
-                    <GoogleLogin
-                        onSuccess={async (credentialResponse) => {
-                            // console.log(credentialResponse);
-                            // console.log(
-                            //     jwtDecode(credentialResponse.credential)
-                            // );
-                            const response = await googleLogin(
-                                credentialResponse
-                            );
-                            console.log("Back with login response.");
-                            console.log(response);
-                        }}
-                        onError={() => {
-                            console.log("Login Failed");
-                        }}
-                        type="icon"
-                        theme="filled_black"
-                        shape="circle"
-                        ux_mode="popup"
-                    />
+                    {userData.isAvailable ? (
+                        <div className="flex gap-1 justify-center items-center">
+                            <img
+                                src={userData.picture}
+                                alt="Pic"
+                                className="w-[24px] h-[24px] rounded-full "
+                            />
+                            <button className="cursor-pointer">
+                                {userData.name}
+                            </button>
+                        </div>
+                    ) : (
+                        <div>
+                            <button
+                                type="button"
+                                onClick={() => handleGoogleLogin()}
+                                className="cursor-pointer"
+                            >
+                                Sign in
+                            </button>
+                        </div>
+                    )}
                 </div>
             </div>
         </div>

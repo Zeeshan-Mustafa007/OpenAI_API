@@ -1,9 +1,11 @@
+import axios from "axios";
+import { useGoogleLogin } from "@react-oauth/google";
+
 const BASE_URL =
     import.meta.env.MODE === "development"
         ? import.meta.env.VITE_DEV_BACKEND_URL
         : import.meta.env.VITE_PROD_BACKEND_URL;
 
-// console.log("Backend URL:", BASE_URL);
 if (!BASE_URL) {
     throw new Error(
         "Backend URL is not defined. Please set the BACKEND_URL environment variable."
@@ -14,8 +16,8 @@ if (!BASE_URL) {
 
 export const fetchChatHistory = async () => {
     try {
-        const res = await fetch(`${BASE_URL}/chat/history`);
-        const data = await res.json();
+        const res = await axios.get(`${BASE_URL}/chat/history`);
+        const data = res.data;
         if (Array.isArray(data.messages)) {
             return data.messages;
         }
@@ -34,11 +36,12 @@ export const uploadChatData = async ({ text, webSearch, image, file }) => {
     if (file) formData.append("file", file);
 
     try {
-        const res = await fetch(`${BASE_URL}/chat/upload`, {
-            method: "POST",
-            body: formData,
+        const res = await axios.post(`${BASE_URL}/chat/upload`, formData, {
+            headers: {
+                "Content-Type": "multipart/form-data",
+            },
         });
-        const data = await res.json();
+        const data = res.data;
         if (data.error) {
             throw new Error(data.error);
         }
@@ -51,24 +54,10 @@ export const uploadChatData = async ({ text, webSearch, image, file }) => {
 
 // USERS
 
-export const googleLogin = async (response) => {
-    try {
-        const res = await fetch(`${BASE_URL}/user/googleLogin`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ response: response }),
-        });
-        const data = await res.json();
-        console.log("Back with server response.");
-        console.log(data);
-        if (data.error) {
-            throw new Error(data.error);
-        }
-        return data;
-    } catch (error) {
-        console.error("Error logging user:", error);
-        throw error;
-    }
+export const googleLogin = async (code) => {
+    const tokens = await axios.post(`${BASE_URL}/user/googleLogin`, {
+        code,
+    });
+    // console.log(tokens);
+    return tokens.data;
 };

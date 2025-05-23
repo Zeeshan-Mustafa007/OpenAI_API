@@ -1,15 +1,19 @@
 const { jwtDecode } = require("jwt-decode");
 const { OAuth2Client } = require("google-auth-library");
-const client = new OAuth2Client();
+require("dotenv").config();
+const Client = new OAuth2Client(
+    process.env.GOOGLE_CLIENT_ID,
+    process.env.GOOGLE_CLIENT_SECRET,
+    "postmessage"
+);
 
 exports.googleLogin = async (req, res) => {
     try {
-        const { response } = req.body;
-        
-        const userData = jwtDecode(response.credential);
-        console.log(userData);
+        const { tokens } = await Client.getToken(req.body.code); // exchange code for tokens
+        const userInfo = jwtDecode(tokens.id_token);
+        // console.log(userInfo);
 
-        res.json({ data: userData });
+        res.json(tokens);
     } catch (err) {
         console.error("Error logging user:", err);
         res.status(500).json({ error: "Login Failed" });
