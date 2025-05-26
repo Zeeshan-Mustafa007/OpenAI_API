@@ -55,9 +55,21 @@ export const uploadChatData = async ({ text, webSearch, image, file }) => {
 // USERS
 
 export const googleLogin = async (code) => {
-    const tokens = await axios.post(`${BASE_URL}/user/googleLogin`, {
+    const response = await axios.post(`${BASE_URL}/user/googleLogin`, {
         code,
     });
-    // console.log(tokens);
-    return tokens.data;
+    console.log(response.data.user);
+    return response.data.user;
+};
+
+export const autoGoogleLogin = async (id) => {
+    try {
+        const response = await axios.post(`${BASE_URL}/user/autoGoogleLogin`, {
+            id,
+        });
+        return response.data.user;
+    } catch (error) {
+        console.error("Error during auto-login:", error);
+        throw error;
+    }
 };

@@ -8,7 +8,13 @@ const userSchema = new mongoose.Schema({
     familyName: String,
     picture: String,
     emailVerified: Boolean,
+    google_auth: {
+        refresh_token: String,
+        access_token: String,
+        expiry_date: Date,
+    },
     authSource: {
+        type: String,
         enum: ["self", "google"],
         default: "self",
     },

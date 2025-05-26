@@ -1,12 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useGoogleLogin } from "@react-oauth/google";
 import { jwtDecode } from "jwt-decode";
 import sidebar_icon from "../assets/svgs/sidebar_icon.svg";
 import newChat_icon from "../assets/svgs/newChat_icon.svg";
-import { googleLogin } from "../services/backendRequests";
+import { autoGoogleLogin, googleLogin } from "../services/backendRequests";
 
 const Header = () => {
-    const [googleTokens, setGoogleTokens] = useState();
     const [userData, setUserData] = useState({
         name: "",
         email: "",
@@ -14,24 +13,45 @@ const Header = () => {
         isAvailable: false,
     });
 
+    useEffect(() => {
+        autoLogin();
+    }, []);
+
     const handleNewChat = () => {
         console.log("New chat created");
     };
 
     const handleGoogleLogin = useGoogleLogin({
         onSuccess: async ({ code }) => {
-            const tokens = await googleLogin(code);
-            setGoogleTokens(tokens);
-            const userInfo = await jwtDecode(tokens.id_token);
+            const userInfo = await googleLogin(code);
             setUserData({
                 name: userInfo.name,
                 email: userInfo.email,
                 picture: userInfo.picture,
                 isAvailable: true,
             });
+
+            sessionStorage.setItem("userID", userInfo.id);
         },
         flow: "auth-code",
     });
+
+    const autoLogin = async () => {
+        const id = sessionStorage.getItem("userID");
+        if (id) {
+            const userInfo = await autoGoogleLogin(id);
+            setUserData({
+                name: userInfo.name,
+                email: userInfo.email,
+                picture: userInfo.picture,
+                isAvailable: true,
+            });
+
+            sessionStorage.setItem("userID", userInfo.id);
+        } else {
+            handleGoogleLogin();
+        }
+    };
 
     return (
         <div className="Header text-white flex justify-between font-semibold">
@@ -64,15 +84,21 @@ const Header = () => {
                     </div>
                 </button>
             </div>
-            <div className="login  flex justify-center items-center mx-3">
+            <div className="login  flex justify-center items-center mx-10">
                 <div className="google-login">
                     {userData.isAvailable ? (
                         <div className="flex gap-1 justify-center items-center">
-                            <img
-                                src={userData.picture}
-                                alt="Pic"
-                                className="w-[24px] h-[24px] rounded-full "
-                            />
+                            {userData.picture ? (
+                                <img
+                                    src={userData.picture}
+                                    alt="Pic"
+                                    className="w-[24px] h-[24px] rounded-full"
+                                />
+                            ) : (
+                                <div className="flex justify-center items-center w-[24px] h-[24px] rounded-full bg-bg-tertiary">
+                                    <span className="text-white">G</span>
+                                </div>
+                            )}
                             <button className="cursor-pointer">
                                 {userData.name}
                             </button>
@@ -82,9 +108,10 @@ const Header = () => {
                             <button
                                 type="button"
                                 onClick={() => handleGoogleLogin()}
-                                className="cursor-pointer"
+                                className="cursor-pointer flex h-full min-w-8 items-center gap-1 justify-center px-3 py-1 rounded-full border border-bg-tertiary hover:bg-bg-tertiary transition-all duration-200 text-white font-semibold"
+                                title="Log in with Google"
                             >
-                                Sign in
+                                Log in
                             </button>
                         </div>
                     )}
