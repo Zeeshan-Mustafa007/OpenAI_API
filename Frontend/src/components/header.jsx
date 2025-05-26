@@ -3,6 +3,7 @@ import { useGoogleLogin } from "@react-oauth/google";
 import { jwtDecode } from "jwt-decode";
 import sidebar_icon from "../assets/svgs/sidebar_icon.svg";
 import newChat_icon from "../assets/svgs/newChat_icon.svg";
+import google_icon from "../assets/svgs/google_icon.svg";
 import { autoGoogleLogin, googleLogin } from "../services/backendRequests";
 
 const Header = () => {
@@ -53,6 +54,16 @@ const Header = () => {
         }
     };
 
+    const handleLogout = () => {
+        setUserData({
+            name: "",
+            email: "",
+            picture: "",
+            isAvailable: false,
+        });
+        sessionStorage.removeItem("userID");
+    };
+
     return (
         <div className="Header text-white flex justify-between font-semibold">
             <div className="flex mx-3 my-2">
@@ -95,11 +106,15 @@ const Header = () => {
                                     className="w-[24px] h-[24px] rounded-full"
                                 />
                             ) : (
-                                <div className="flex justify-center items-center w-[24px] h-[24px] rounded-full bg-bg-tertiary">
-                                    <span className="text-white">G</span>
+                                <div className="flex justify-center items-center w-[24px] h-[24px] rounded-full bg-white">
+                                    <img
+                                        src={google_icon}
+                                        alt="Pic"
+                                        className="w-[24px] h-[24px]"
+                                    />
                                 </div>
                             )}
-                            <button className="cursor-pointer">
+                            <button onClick={handleLogout} className="cursor-pointer">
                                 {userData.name}
                             </button>
                         </div>
