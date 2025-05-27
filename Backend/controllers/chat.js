@@ -36,9 +36,9 @@ async function ensureThread() {
         const thread = await openai.beta.threads.create();
         THREAD_ID = thread.id;
         writeConfig("THREAD_ID", THREAD_ID);
-        console.log("✨ Thread created:", THREAD_ID);
+        console.log("Thread created:", THREAD_ID);
     } else {
-        console.log("✅ Using existing Thread ID:", THREAD_ID);
+        console.log("Using existing Thread ID:", THREAD_ID);
     }
 }
 
@@ -255,7 +255,7 @@ exports.newChat = async (req, res) => {
         if (THREAD_ID) {
             await openai.beta.threads.delete(THREAD_ID);
             writeConfig("THREAD_ID", null);
-            console.log("🗑️ Thread deleted:", THREAD_ID);
+            console.log("Thread deleted:", THREAD_ID);
         }
 
         res.json({ message: "New chat started." });
