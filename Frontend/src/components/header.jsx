@@ -26,12 +26,11 @@ const Header = () => {
         onSuccess: async ({ code }) => {
             const userInfo = await googleLogin(code);
             setUserData({
-                name: userInfo.name,
-                email: userInfo.email,
-                picture: userInfo.picture,
+                name: userInfo?.name,
+                email: userInfo?.email,
+                picture: userInfo?.picture,
                 isAvailable: true,
             });
-
             sessionStorage.setItem("userID", userInfo.id);
         },
         flow: "auth-code",
@@ -42,9 +41,9 @@ const Header = () => {
         if (id) {
             const userInfo = await autoGoogleLogin(id);
             setUserData({
-                name: userInfo.name,
-                email: userInfo.email,
-                picture: userInfo.picture,
+                name: userInfo?.name,
+                email: userInfo?.email,
+                picture: userInfo?.picture,
                 isAvailable: true,
             });
 
@@ -99,11 +98,16 @@ const Header = () => {
                 <div className="google-login">
                     {userData.isAvailable ? (
                         <div className="flex gap-1 justify-center items-center">
-                            {userData.picture ? (
+                            {userData.picture &&
+                            userData.picture.trim() !== "" ? (
                                 <img
                                     src={userData.picture}
                                     alt="Pic"
                                     className="w-[24px] h-[24px] rounded-full"
+                                    onError={(e) => {
+                                        e.target.onerror = null;
+                                        e.target.src = google_icon;
+                                    }}
                                 />
                             ) : (
                                 <div className="flex justify-center items-center w-[24px] h-[24px] rounded-full bg-white">
@@ -114,7 +118,10 @@ const Header = () => {
                                     />
                                 </div>
                             )}
-                            <button onClick={handleLogout} className="cursor-pointer">
+                            <button
+                                onClick={handleLogout}
+                                className="cursor-pointer"
+                            >
                                 {userData.name}
                             </button>
                         </div>
